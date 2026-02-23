@@ -1,0 +1,7 @@
+{
+  "name": "PetLocal - Central de Serviços Pet",
+  "description": "Hub completo para pets: emissão de RG e Certidão, controle de vacinas e marketplace de adestradores, hotéis e veterinários.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
