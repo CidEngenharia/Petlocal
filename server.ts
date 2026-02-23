@@ -16,11 +16,11 @@ const __dirname = path.dirname(__filename);
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key';
 
-const app = express();
-const PORT = Number(process.env.PORT) || 3000;
-
 // --- STRIPE INTEGRATION ---
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+
+const app = express();
+const PORT = Number(process.env.PORT) || 3000;
 
 // Stripe Webhook needs raw body, must be BEFORE express.json()
 app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -52,18 +52,6 @@ app.use(express.json());
 // API Routes
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// Auth Middleware
-const authenticateToken = (req: any, res: any, next: any) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.sendStatus(401);
-  jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
-
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
   const { email, password, role } = req.body;
@@ -82,7 +70,7 @@ app.post('/api/auth/login', async (req, res) => {
   res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
 });
 
-// Pets
+// Pets, Vaccines, Services, Documents
 app.get('/api/pets/:ownerId', async (req, res) => {
   const pets = await prisma.pet.findMany({ where: { ownerId: parseInt(req.params.ownerId) }, include: { vaccines: true, documents: true } });
   res.json(pets);
@@ -99,7 +87,6 @@ app.put('/api/pets/:id', async (req, res) => {
   res.json(pet);
 });
 
-// Vaccines
 app.get('/api/vaccines/:petId', async (req, res) => {
   const vaccines = await prisma.vaccine.findMany({ where: { petId: parseInt(req.params.petId) } });
   res.json(vaccines);
@@ -111,7 +98,6 @@ app.post('/api/vaccines', async (req, res) => {
   res.json(vaccine);
 });
 
-// Services
 app.get('/api/services', async (req, res) => {
   const services = await prisma.service.findMany();
   res.json(services);
@@ -128,7 +114,6 @@ app.post('/api/services', async (req, res) => {
   res.json(service);
 });
 
-// Documents
 app.get('/api/documents/:petId', async (req, res) => {
   const docs = await prisma.document.findMany({ where: { petId: parseInt(req.params.petId) } });
   res.json(docs);
@@ -156,26 +141,28 @@ app.post('/api/documents/order', async (req, res) => {
   } catch (err: any) { res.status(500).json({ error: err.message }); }
 });
 
-async function startServer() {
+// Static assets for production
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+  app.use(express.static(path.join(__dirname, 'dist')));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api/')) {
+      res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    }
+  });
+}
+
+// Development setup
+async function setupDev() {
   if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     const vite = await createViteServer({ server: { middlewareMode: true }, appType: 'spa' });
     app.use(vite.middlewares);
-  } else {
-    app.use(express.static(path.join(__dirname, 'dist')));
-    app.get('*', (req, res) => {
-      if (!req.path.startsWith('/api/')) {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-      }
-    });
-  }
 
-  if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
   }
 }
 
-startServer();
+setupDev();
 
 export default app;
