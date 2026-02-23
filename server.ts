@@ -58,7 +58,8 @@ app.post('/api/auth/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({ data: { email, password: hashedPassword, role: role || 'owner' } });
-    res.json({ id: user.id, email: user.email, role: user.role });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
+    res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
   } catch (err) { res.status(400).json({ error: 'User already exists' }); }
 });
 

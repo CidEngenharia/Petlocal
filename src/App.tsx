@@ -46,9 +46,6 @@ export default function App() {
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
         setView('dashboard');
-      } else if (isRegister) {
-        // After register, auto login or just inform success
-        alert('Cadastro realizado com sucesso! Faça login.');
       } else {
         alert(data.error || 'Erro na autenticação');
       }
