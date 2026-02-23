@@ -42,15 +42,19 @@ export default function App() {
       const data = await res.json();
 
       if (data.token) {
+        if (isRegister) {
+          alert('Conta criada com sucesso! Redirecionando...');
+        }
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
         setView('dashboard');
       } else {
-        alert(data.error || 'Erro na autenticação');
+        alert(data.error || (isRegister ? 'Erro ao criar conta' : 'E-mail ou senha incorretos'));
       }
     } catch (err) {
       console.error(err);
+      alert('Erro de conexão: Verifique se o servidor está rodando.');
     } finally {
       setLoading(false);
     }

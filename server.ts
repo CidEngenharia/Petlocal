@@ -60,7 +60,11 @@ app.post('/api/auth/register', async (req, res) => {
     const user = await prisma.user.create({ data: { email, password: hashedPassword, role: role || 'owner' } });
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
     res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
-  } catch (err) { res.status(400).json({ error: 'User already exists' }); }
+  } catch (err: any) {
+    console.error('Register error:', err);
+    if (err.code === 'P2002') return res.status(400).json({ error: 'Este e-mail já está cadastrado.' });
+    res.status(500).json({ error: 'Erro ao criar conta. Tente novamente.' });
+  }
 });
 
 app.post('/api/auth/login', async (req, res) => {
