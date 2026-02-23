@@ -92,23 +92,59 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
 
                 <div className="p-8 overflow-y-auto flex-grow">
                     {activeTab === 'docs' && (
-                        <div className="grid md:grid-cols-2 gap-6">
-                            <DocumentCard
-                                title="RG Pet"
-                                description="Identidade oficial digital com foto e QR Code."
-                                price="R$ 29,90"
-                                status={documents.find(d => d.type === 'RG')?.status}
-                                onOrder={() => orderDoc('RG')}
-                                onView={() => onViewDocument('RG')}
-                            />
-                            <DocumentCard
-                                title="Certidão de Nascimento"
-                                description="Registro formal de origem e linhagem."
-                                price="R$ 19,90"
-                                status={documents.find(d => d.type === 'BirthCert')?.status}
-                                onOrder={() => orderDoc('BirthCert')}
-                                onView={() => onViewDocument('BirthCert')}
-                            />
+                        <div className="space-y-8">
+                            {/* Marketing Banner */}
+                            <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-8 text-white shadow-xl overflow-hidden relative">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl animate-pulse" />
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <ShieldCheck className="w-8 h-8 text-yellow-400" />
+                                        <span className="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">Nós podemos te ajudar</span>
+                                    </div>
+                                    <h3 className="text-3xl font-black mb-4 tracking-tight leading-none">Seu Pet não é Registrado?</h3>
+                                    <p className="text-xl text-indigo-100 font-bold mb-6">
+                                        RG Pet e Certidão <span className="text-yellow-400 underline underline-offset-4 decoration-2">INCLUSOS NO REGISTRO</span> por apenas R$ 29,90
+                                    </p>
+                                    <p className="text-stone-200 text-sm leading-relaxed max-w-2xl font-medium">
+                                        Utilizam em banhos e tosas, agilizam cadastros no veterinário, guardam os dados do seu pet de forma segura e personalizada com a fotinha dele. Tudo pronto para impressão!
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <DocumentCard
+                                    title="RG Pet Digital"
+                                    description="Utilize em banhos e tosas, agilize cadastros no veterinário e guarde os dados de forma segura e personalizada com a foto do seu pet."
+                                    price="R$ 29,90"
+                                    status={documents.find(d => d.type === 'RG')?.status}
+                                    onOrder={() => orderDoc('RG')}
+                                    onView={() => onViewDocument('RG')}
+                                />
+                                <DocumentCard
+                                    title="Certidão de Nascimento"
+                                    description="Dados sobre o seu pet junto ao nascimento dele, foto e QR code profissional para identificação única."
+                                    price="Incluso"
+                                    status={documents.find(d => d.type === 'BirthCert')?.status}
+                                    onOrder={() => orderDoc('BirthCert')}
+                                    onView={() => onViewDocument('BirthCert')}
+                                />
+                                <DocumentCard
+                                    title="Tag de Identificação"
+                                    description="Segurança imprevistos: QR Code para o perfil digital do pet caso ele se perca, permitindo contato imediato com o dono."
+                                    price="Incluso"
+                                    status={documents.find(d => d.type === 'RG')?.status} // Assuming linked to RG for now
+                                    onOrder={() => orderDoc('RG')}
+                                    onView={() => onViewDocument('RG')}
+                                />
+                                <DocumentCard
+                                    title="Carteirinha de Vacinação"
+                                    description="Controle de vacinas completo e personalizado com foto. Formato A4 dobrável pronto para imprimir e usar."
+                                    price="Incluso"
+                                    status={documents.find(d => d.type === 'RG')?.status} // Assuming linked to RG for now
+                                    onOrder={() => orderDoc('RG')}
+                                    onView={() => onViewDocument('RG')}
+                                />
+                            </div>
                         </div>
                     )}
 
