@@ -39,9 +39,19 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, role })
       });
-      const data = await res.json();
 
-      if (data.token) {
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        const text = await res.text();
+        console.error('Non-JSON response:', text);
+        alert(`Erro do servidor (${res.status}): O servidor não retornou um JSON válido.`);
+        setLoading(false);
+        return;
+      }
+
+      if (res.ok && data.token) {
         if (isRegister) {
           alert('Conta criada com sucesso! Redirecionando...');
         }
@@ -52,9 +62,9 @@ export default function App() {
       } else {
         alert(data.error || (isRegister ? 'Erro ao criar conta' : 'E-mail ou senha incorretos'));
       }
-    } catch (err) {
-      console.error(err);
-      alert('Erro de conexão: Verifique se o servidor está rodando.');
+    } catch (err: any) {
+      console.error('Fetch error:', err);
+      alert(`Erro de conexão: ${err.message}. Verifique se o servidor está rodando.`);
     } finally {
       setLoading(false);
     }

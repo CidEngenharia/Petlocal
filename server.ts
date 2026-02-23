@@ -55,6 +55,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
   const { email, password, role } = req.body;
+  console.log(`Registration attempt for: ${email}`);
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({ data: { email, password: hashedPassword, role: role || 'owner' } });
