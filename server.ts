@@ -1,5 +1,4 @@
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
 import { PrismaClient } from '@prisma/client';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -50,7 +49,25 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
 app.use(express.json());
 
 // API Routes
-app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+app.get('/api/health', async (req, res) => {
+  try {
+    // Basic connection check
+    await prisma.$connect();
+    res.json({
+      status: 'ok',
+      env: process.env.NODE_ENV,
+      vercel: !!process.env.VERCEL,
+      database: 'connected'
+    });
+  } catch (err: any) {
+    console.error('Health check failed:', err);
+    res.status(500).json({
+      status: 'error',
+      error: 'Database connection failed',
+      details: err.message
+    });
+  }
+});
 
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
@@ -59,21 +76,41 @@ app.post('/api/auth/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({ data: { email, password: hashedPassword, role: role || 'owner' } });
+    console.log('User created successfully:', user.id);
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
     res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
   } catch (err: any) {
-    console.error('Register error:', err);
+    console.error('CRITICAL REGISTER ERROR:', err);
     if (err.code === 'P2002') return res.status(400).json({ error: 'Este e-mail já está cadastrado.' });
-    res.status(500).json({ error: 'Erro ao criar conta. Tente novamente.' });
+    // Return the actual error message to the client for debugging
+    res.status(500).json({
+      error: 'Erro no servidor ao criar conta.',
+      details: err.message,
+      code: err.code,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
   }
 });
 
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !(await bcrypt.compare(password, user.password))) return res.status(401).json({ error: 'Invalid credentials' });
-  const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
-  res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
+  console.log(`Login attempt for: ${email}`);
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: 'E-mail ou senha incorretos' });
+    }
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
+    console.log('Login successful for:', email);
+    res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
+  } catch (err: any) {
+    console.error('CRITICAL LOGIN ERROR:', err);
+    res.status(500).json({
+      error: 'Erro interno no servidor ao tentar entrar.',
+      details: err.message,
+      code: err.code
+    });
+  }
 });
 
 // Pets, Vaccines, Services, Documents
@@ -158,8 +195,10 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
 }
 
 // Development setup
-async function setupDev() {
-  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.VERCEL_ENV) {
+  async function setupDev() {
+    console.log('Starting Vite development server...');
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({ server: { middlewareMode: true }, appType: 'spa' });
     app.use(vite.middlewares);
 
@@ -167,8 +206,11 @@ async function setupDev() {
       console.log(`Server running on http://localhost:${PORT}`);
     });
   }
+  setupDev().catch(err => {
+    console.error('Vite setup failed:', err);
+  });
+} else {
+  console.log('Production/Vercel mode: Skipping Vite setup and port binding.');
 }
-
-setupDev();
 
 export default app;
