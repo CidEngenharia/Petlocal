@@ -1,5 +1,6 @@
 ﻿import express from 'express';
-import prisma from '../lib/prisma';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
