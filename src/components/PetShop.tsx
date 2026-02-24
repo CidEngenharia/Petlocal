@@ -92,6 +92,13 @@ const PetShop: React.FC<PetShopProps> = ({ user, setView }) => {
             animate={{ opacity: 1 }}
             className="max-w-7xl mx-auto px-4 py-12"
         >
+            <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+                <div>
+                    <h2 className="text-4xl font-serif mb-2">Pets à Venda</h2>
+                    <p className="text-stone-500">Encontre o novo companheiro ideal ou acessórios para o seu pet.</p>
+                </div>
+            </div>
+
             <div className="flex flex-wrap gap-4 mb-12">
                 {[
                     { id: 'all', label: 'Todos os Itens', icon: ShoppingBag },
@@ -276,8 +283,8 @@ const PetShop: React.FC<PetShopProps> = ({ user, setView }) => {
                     <div className="bg-brand-primary/20 p-4 rounded-full w-fit mb-6">
                         <Tag className="w-8 h-8 text-brand-primary" />
                     </div>
-                    <h2 className="text-4xl font-serif mb-2">Pets à Venda</h2>
-                    <p className="text-stone-500">Encontre o novo companheiro ideal ou acessórios para o seu pet.</p>
+                    <h3 className="text-4xl font-serif mb-4">Cadastre seus Pets ou Acessórios</h3>
+                    <p className="text-stone-400 text-lg">Seja um acessório ou um pet que precisa de um novo lar, nossa plataforma facilita a conexão com o comprador ideal.</p>
                 </div>
                 {user ? (
                     <button
