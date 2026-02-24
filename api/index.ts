@@ -159,6 +159,28 @@ app.get('/api/public/pets', async (req, res) => {
     }
 });
 
+// GET Top 10 Pets (Last 10 registered, public)
+app.get('/api/public/top10', async (req, res) => {
+    try {
+        const pets = await prisma.pet.findMany({
+            take: 10,
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                name: true,
+                species: true,
+                breed: true,
+                photoUrl: true,
+                city: true,
+                state: true
+            }
+        });
+        res.json(pets);
+    } catch (err: any) {
+        res.status(500).json({ error: 'Erro ao buscar top 10' });
+    }
+});
+
 app.post('/api/pets', async (req, res) => {
     const { owner_id, name, species, breed, birthDate, photoUrl, weight, gender, address, city, state, contact, intent } = req.body;
     try {
@@ -231,17 +253,49 @@ app.get('/api/documents/:petId', async (req, res) => {
     const docs = await prisma.document.findMany({ where: { petId: parseInt(req.params.petId) } });
     res.json(docs);
 });
-
 app.post('/api/documents/order', async (req, res) => {
     const { pet_id, type, user_id } = req.body;
     try {
+        let productName = '';
+        let amount = 0;
+
+        switch (type) {
+            case 'COMBO':
+                productName = 'Combo Digital (RG + Certidão + Vacina)';
+                amount = 2990;
+                break;
+            case 'TAG_KEYCHAIN':
+                productName = 'Chaveiro Tag de Identificação';
+                amount = 2990;
+                break;
+            case 'RG':
+                productName = 'RG Pet Digital';
+                amount = 1590;
+                break;
+            case 'BIRTH_CERT':
+                productName = 'Certidão de Nascimento';
+                amount = 1590;
+                break;
+            case 'VACCINE_CARD':
+                productName = 'Carteira de Vacinação';
+                amount = 1590;
+                break;
+            case 'QR_CODE':
+                productName = 'QR Code de Identificação';
+                amount = 1590;
+                break;
+            default:
+                productName = 'Documento Pet';
+                amount = 1590;
+        }
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: [{
                 price_data: {
                     currency: 'brl',
-                    product_data: { name: type === 'RG' ? 'RG Pet Digital' : 'Certidão de Nascimento Pet' },
-                    unit_amount: type === 'RG' ? 2990 : 1990,
+                    product_data: { name: productName },
+                    unit_amount: amount,
                 },
                 quantity: 1,
             }],

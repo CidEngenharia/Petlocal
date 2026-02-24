@@ -112,7 +112,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                             </h2>
                             <span className="bg-[#22c55e] text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block italic">Nós podemos te ajudar</span>
                             <p className="text-2xl text-stone-300 font-bold mb-10 leading-tight">
-                                <span className="text-yellow-400 font-black">RG PET e CERTIDÃO</span>
+                                <span className="text-yellow-400 font-black">COMBO: RG + Certidão + Vacina</span> por apenas R$ 29,90
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -138,9 +138,14 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                                 <button onClick={onGetStarted} className="bg-[#22c55e] hover:bg-[#22c55e]/90 text-white px-10 py-5 rounded-[2rem] font-black text-xl hover:scale-105 transition-all shadow-xl flex items-center gap-3">
                                     Registrar Agora <ExternalLink className="w-6 h-6" />
                                 </button>
-                                <div className="text-stone-400 font-bold text-lg flex items-center gap-2">
-                                    <CheckCircle className="w-6 h-6 text-green-400" />
-                                    Apenas R$ 29,90
+                                <div className="text-stone-400 font-bold text-lg flex flex-col gap-1">
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle className="w-6 h-6 text-green-400" />
+                                        Combo Completo R$ 29,90
+                                    </div>
+                                    <div className="text-xs text-white/40 uppercase tracking-widest pl-8 italic">
+                                        Ou R$ 15,90 por item individual
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +177,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                         />
                         <FAQItem
                             question="Qual o custo total?"
-                            answer="O registro completo com todos os 4 documentos digitais custa apenas R$ 29,90 em pagamento único via Stripe."
+                            answer="O Combo Completo (RG + Certidão + Vacina) custa R$ 29,90. Itens individuais como QR Code de Identifcação custam R$ 15,90 cada. O Chaveiro Tag de Identificação (físico) custa R$ 29,90 separadamente."
                         />
                     </div>
                 </div>

@@ -28,7 +28,7 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
         setDocuments(await dRes.json());
     };
 
-    const orderDoc = async (type: 'RG' | 'BirthCert') => {
+    const orderDoc = async (type: string) => {
         const res = await fetch('/api/documents/order', {
             method: 'POST',
             headers: {
@@ -93,56 +93,73 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
                 <div className="p-8 overflow-y-auto flex-grow">
                     {activeTab === 'docs' && (
                         <div className="space-y-8">
-                            {/* Marketing Banner */}
-                            <div className="bg-gradient-to-br from-[#004010]/95 to-[#004010]/80 backdrop-blur-sm rounded-3xl p-8 text-white shadow-xl overflow-hidden relative">
+                            {/* Marketing Banner - COMBO */}
+                            <div className="bg-gradient-to-br from-brand-primary/95 to-brand-primary/80 backdrop-blur-sm rounded-3xl p-8 text-white shadow-xl overflow-hidden relative border border-white/10">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl animate-pulse" />
-                                <div className="relative z-10">
-                                    <h3 className="text-3xl font-black mb-4 tracking-tight leading-none">Seu Pet não é Registrado?</h3>
-                                    <div className="flex items-center gap-2 mb-6">
-                                        <ShieldCheck className="w-8 h-8 text-yellow-400" />
-                                        <span className="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">Nós podemos te ajudar</span>
+                                <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+                                    <div className="flex-grow">
+                                        <h3 className="text-3xl font-black mb-2 tracking-tight leading-none">Combo PetLocal Premium</h3>
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <ShieldCheck className="w-5 h-5 text-yellow-400" />
+                                            <span className="bg-white/20 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">O Plano mais Completo</span>
+                                        </div>
+                                        <p className="text-stone-200 text-sm leading-relaxed max-w-xl font-medium mb-6">
+                                            Adquira o <span className="text-white font-bold italic">RG Pet Digital + Certidão de Nascimento + Carteirinha de Vacinação</span> personalizada em um único pacote e economize!
+                                        </p>
+                                        <div className="flex items-center gap-4">
+                                            <div className="bg-yellow-400 text-brand-primary px-4 py-2 rounded-2xl font-black text-2xl shadow-lg">R$ 29,90</div>
+                                            <span className="text-xs text-white/60 font-medium italic">Tudo pronto para impressão A4</span>
+                                        </div>
                                     </div>
-                                    <p className="text-xl text-indigo-100 font-bold mb-6">
-                                        <span className="text-yellow-400 font-black">RG PET e CERTIDÃO</span> por apenas R$ 29,90
-                                    </p>
-                                    <p className="text-stone-200 text-sm leading-relaxed max-w-2xl font-medium">
-                                        Utilizam em banhos e tosas, agilizam cadastros no veterinário, guardam os dados do seu pet de forma segura e personalizada com a fotinha dele. Tudo pronto para impressão!
-                                    </p>
+                                    <button
+                                        onClick={() => orderDoc('COMBO')}
+                                        className="btn-primary bg-white text-brand-primary hover:bg-stone-100 border-0 px-8 py-4 text-lg shadow-xl shadow-black/20"
+                                    >
+                                        Solicitar Combo
+                                    </button>
                                 </div>
                             </div>
 
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <DocumentCard
                                     title="RG Pet Digital"
-                                    description="Utilize em banhos e tosas, agilize cadastros no veterinário e guarde os dados de forma segura e personalizada com a foto do seu pet."
-                                    price="R$ 29,90"
+                                    description="Identidade digital com foto. Ideal para banho e tosa e consultas veterinárias."
+                                    price="R$ 15,90"
                                     status={documents.find(d => d.type === 'RG')?.status}
                                     onOrder={() => orderDoc('RG')}
                                     onView={() => onViewDocument('RG')}
                                 />
                                 <DocumentCard
                                     title="Certidão de Nascimento"
-                                    description="Dados sobre o seu pet junto ao nascimento dele, foto e QR code profissional para identificação única."
-                                    price="Incluso"
+                                    description="Documento oficial com dados de origem, linhagem e foto personalizada."
+                                    price="R$ 15,90"
                                     status={documents.find(d => d.type === 'BirthCert')?.status}
-                                    onOrder={() => orderDoc('BirthCert')}
+                                    onOrder={() => orderDoc('BIRTH_CERT')}
                                     onView={() => onViewDocument('BirthCert')}
                                 />
                                 <DocumentCard
-                                    title="Tag de Identificação"
-                                    description="Segurança imprevistos: QR Code para o perfil digital do pet caso ele se perca, permitindo contato imediato com o dono."
-                                    price="Incluso"
-                                    status={documents.find(d => d.type === 'RG')?.status} // Assuming linked to RG for now
-                                    onOrder={() => orderDoc('RG')}
+                                    title="Carteira de Vacinação"
+                                    description="Controle completo e visual das vacinas. Versão oficial PetLocal."
+                                    price="R$ 15,90"
+                                    status={documents.find(d => d.type === 'VACCINE_CARD')?.status}
+                                    onOrder={() => orderDoc('VACCINE_CARD')}
+                                    onView={() => onViewDocument('RG')} // Link to generic viewer for now
+                                />
+                                <DocumentCard
+                                    title="QR Code Identificação"
+                                    description="Código digital para acesso rápido ao perfil completo do pet."
+                                    price="R$ 15,90"
+                                    status={documents.find(d => d.type === 'QR_CODE')?.status}
+                                    onOrder={() => orderDoc('QR_CODE')}
                                     onView={() => onViewDocument('RG')}
                                 />
                                 <DocumentCard
-                                    title="Carteirinha de Vacinação"
-                                    description="Controle de vacinas completo e personalizado com foto. Formato A4 dobrável pronto para imprimir e usar."
-                                    price="Incluso"
-                                    status={documents.find(d => d.type === 'RG')?.status} // Assuming linked to RG for now
-                                    onOrder={() => orderDoc('RG')}
-                                    onView={() => onViewDocument('RG')}
+                                    title="Chaveiro Tag (Físico)"
+                                    description="Tag metálica com QR Code gravado para coleira do pet. Segurança total."
+                                    price="R$ 29,90"
+                                    status={documents.find(d => d.type === 'TAG_KEYCHAIN')?.status}
+                                    onOrder={() => orderDoc('TAG_KEYCHAIN')}
+                                    onView={() => alert('Este é um produto físico. Verifique seu e-mail para detalhes do envio.')}
                                 />
                             </div>
                         </div>

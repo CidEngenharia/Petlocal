@@ -36,6 +36,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, currentView, setView, onOpenSideb
                     <div className="hidden md:flex items-center gap-8">
                         <button onClick={() => setView('home')} className={`text-sm font-medium ${currentView === 'home' ? 'text-brand-primary' : 'text-stone-500'}`}>Início</button>
                         <button onClick={() => setView('marketplace')} className={`text-sm font-medium ${currentView === 'marketplace' ? 'text-brand-primary' : 'text-stone-500'}`}>Serviços</button>
+                        <button onClick={() => setView('top10')} className={`text-sm font-medium ${currentView === 'top10' ? 'text-brand-primary' : 'text-stone-500'}`}>Top 10</button>
                         {user && (
                             <button onClick={() => setView('dashboard')} className={`text-sm font-medium ${currentView === 'dashboard' ? 'text-brand-primary' : 'text-stone-500'}`}>Meus Pets</button>
                         )}
