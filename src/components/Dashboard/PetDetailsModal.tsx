@@ -94,16 +94,16 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
                     {activeTab === 'docs' && (
                         <div className="space-y-8">
                             {/* Marketing Banner */}
-                            <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-8 text-white shadow-xl overflow-hidden relative">
+                            <div className="bg-gradient-to-br from-[#004010]/95 to-[#004010]/80 backdrop-blur-sm rounded-3xl p-8 text-white shadow-xl overflow-hidden relative">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl animate-pulse" />
                                 <div className="relative z-10">
-                                    <div className="flex items-center gap-2 mb-4">
+                                    <h3 className="text-3xl font-black mb-4 tracking-tight leading-none">Seu Pet não é Registrado?</h3>
+                                    <div className="flex items-center gap-2 mb-6">
                                         <ShieldCheck className="w-8 h-8 text-yellow-400" />
                                         <span className="bg-white/20 text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">Nós podemos te ajudar</span>
                                     </div>
-                                    <h3 className="text-3xl font-black mb-4 tracking-tight leading-none">Seu Pet não é Registrado?</h3>
                                     <p className="text-xl text-indigo-100 font-bold mb-6">
-                                        RG Pet e Certidão <span className="text-yellow-400 underline underline-offset-4 decoration-2">INCLUSOS NO REGISTRO</span> por apenas R$ 29,90
+                                        <span className="text-yellow-400 font-black">RG PET e CERTIDÃO</span> por apenas R$ 29,90
                                     </p>
                                     <p className="text-stone-200 text-sm leading-relaxed max-w-2xl font-medium">
                                         Utilizam em banhos e tosas, agilizam cadastros no veterinário, guardam os dados do seu pet de forma segura e personalizada com a fotinha dele. Tudo pronto para impressão!

@@ -30,7 +30,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user }) => {
                     </div>
                     <div className="bg-stone-50 p-6 rounded-3xl">
                         <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Status da Conta</div>
-                        <div className="text-green-600 font-medium">Ativa</div>
+                        <div className="text-brand-primary font-medium">Ativa</div>
                     </div>
                 </div>
 

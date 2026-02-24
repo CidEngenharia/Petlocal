@@ -40,13 +40,13 @@ export default function App() {
         body: JSON.stringify({ email, password, role })
       });
 
+      const text = await res.text();
       let data;
       try {
-        data = await res.json();
+        data = JSON.parse(text);
       } catch (e) {
-        const text = await res.text();
         console.error('Non-JSON response:', text);
-        alert(`Erro do servidor (${res.status}): O servidor não retornou um JSON válido.`);
+        alert(`Erro do servidor (${res.status}): ${text.length > 0 ? text.slice(0, 100) : 'Resposta vazia'}`);
         setLoading(false);
         return;
       }
@@ -186,7 +186,7 @@ export default function App() {
         />
       )}
 
-      <footer className="bg-brand-primary text-white/80 py-12">
+      <footer className="bg-[#004010] text-white/80 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-sm mb-8">© 2024 PetLocal - O hub definitivo para o bem-estar do seu pet.</p>
           <p className="text-xs text-white/40">Developer cidEngenharia - Sidney Sales</p>

@@ -74,7 +74,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
 
                 <div className="relative">
                     <div className="aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl rotate-2">
-                        <img src="https://picsum.photos/seed/pet1/800/1000" alt="Happy dog" className="w-full h-full object-cover" />
+                        <img src="/hero-dog.png" alt="Happy dog" className="w-full h-full object-cover" />
                     </div>
                     <div className="absolute top-10 -right-5 bg-white p-6 rounded-3xl shadow-lg max-w-xs animate-bounce-slow">
                         <div className="flex items-center gap-3 mb-2">
@@ -102,17 +102,17 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
 
             {/* --- DIGITAL DOCUMENTATION PREMIUM SECTION --- */}
             <section id="documentation" className="scroll-mt-24">
-                <div className="bg-gradient-to-br from-stone-900 to-stone-800 rounded-[3rem] p-8 md:p-16 text-white shadow-2xl overflow-hidden relative mb-24">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl -mr-48 -mt-48" />
+                <div className="bg-gradient-to-br from-[#004010]/95 to-[#004010]/80 backdrop-blur-sm rounded-[3rem] p-8 md:p-16 text-white shadow-2xl overflow-hidden relative mb-24">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-[#22c55e]/10 rounded-full blur-3xl -mr-48 -mt-48" />
 
                     <div className="flex flex-col lg:flex-row gap-16 items-center relative z-10">
                         <div className="flex-1">
-                            <span className="bg-brand-primary text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-6 inline-block italic">Nós podemos te ajudar</span>
-                            <h2 className="text-5xl md:text-7xl font-serif font-medium mb-8 leading-[0.9]">
-                                Seu <span className="text-brand-primary italic">Pet</span> não é Registrado?
+                            <h2 className="text-5xl md:text-7xl font-serif font-medium mb-4 leading-[0.9]">
+                                Seu <span className="text-[#22c55e] italic">Pet</span> não é Registrado?
                             </h2>
+                            <span className="bg-[#22c55e] text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block italic">Nós podemos te ajudar</span>
                             <p className="text-2xl text-stone-300 font-bold mb-10 leading-tight">
-                                RG Pet e Certidão <span className="text-yellow-400 underline underline-offset-8 decoration-2">INCLUSOS NO REGISTRO</span>
+                                <span className="text-yellow-400 font-black">RG PET e CERTIDÃO</span>
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -124,7 +124,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-4">
                                         <div className="bg-white/10 w-12 h-12 rounded-2xl flex items-center justify-center shrink-0">
-                                            <item.icon className="w-6 h-6 text-brand-primary" />
+                                            <item.icon className="w-6 h-6 text-[#22c55e]" />
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-lg mb-1">{item.title}</h4>
@@ -135,7 +135,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                             </div>
 
                             <div className="flex flex-wrap gap-6 items-center">
-                                <button onClick={onGetStarted} className="bg-brand-primary hover:bg-brand-primary/90 text-white px-10 py-5 rounded-[2rem] font-black text-xl hover:scale-105 transition-all shadow-xl flex items-center gap-3">
+                                <button onClick={onGetStarted} className="bg-[#22c55e] hover:bg-[#22c55e]/90 text-white px-10 py-5 rounded-[2rem] font-black text-xl hover:scale-105 transition-all shadow-xl flex items-center gap-3">
                                     Registrar Agora <ExternalLink className="w-6 h-6" />
                                 </button>
                                 <div className="text-stone-400 font-bold text-lg flex items-center gap-2">

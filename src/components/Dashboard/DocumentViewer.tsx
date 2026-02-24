@@ -39,18 +39,18 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pet, type, onClose }) =
                 </div>
 
                 {/* --- MARKETING HEADER --- */}
-                <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-8 mb-12 shadow-2xl relative overflow-hidden">
+                <div className="bg-gradient-to-br from-[#004010]/95 to-[#004010]/80 backdrop-blur-sm rounded-3xl p-8 mb-12 shadow-2xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl animate-pulse" />
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/10 rounded-full -ml-32 -mb-32 blur-3xl" />
 
                     <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
                         <div className="flex-1">
-                            <span className="bg-white/20 text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block">Nós podemos te ajudar</span>
-                            <h1 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                            <h1 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
                                 Seu Pet não é Registrado?
                             </h1>
+                            <span className="bg-white/20 text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block">Nós podemos te ajudar</span>
                             <p className="text-xl text-indigo-100 font-bold mb-8">
-                                RG Pet e Certidão <span className="text-yellow-400 underline underline-offset-4 decoration-2">INCLUSOS NO REGISTRO</span>
+                                <span className="text-yellow-400 font-black">RG PET e CERTIDÃO</span>
                             </p>
                             <div className="flex flex-wrap gap-4">
                                 <button className="bg-white text-indigo-700 px-8 py-4 rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-xl flex items-center gap-2">
