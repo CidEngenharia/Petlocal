@@ -163,7 +163,7 @@ export default function App() {
 
           {view === 'donations' && <DonationArea key="donations" user={user} />}
 
-          {view === 'shop' && <PetShop key="shop" />}
+          {view === 'shop' && <PetShop key="shop" user={user} setView={setView} />}
 
           {view === 'top10' && <Top10View key="top10" />}
 

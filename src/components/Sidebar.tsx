@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView
     const menuItems = [
         { id: 'dashboard', label: 'Documentação Digital', icon: FileText },
         { id: 'marketplace', label: 'Marketplace PET', icon: ShoppingBag },
-        { id: 'shop', label: 'Pet Shop (Vendas)', icon: Dog },
+        { id: 'shop', label: 'Pets à Venda', icon: Dog },
         { id: 'donations', label: 'Doações', icon: Heart },
         { id: 'top10', label: 'Top 10 Pets', icon: ShieldCheck },
         { id: 'profile', label: 'Meu Perfil', icon: Users },

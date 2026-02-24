@@ -51,3 +51,13 @@ export interface PetDocument {
   type: 'RG' | 'BirthCert';
   status: 'pending' | 'paid' | 'issued';
 }
+
+export interface Accessory {
+  id: number;
+  ownerId: number;
+  name: string;
+  description?: string;
+  price: number;
+  category: string;
+  photoUrl?: string;
+}

@@ -318,6 +318,53 @@ if ((process.env.NODE_ENV === 'production') && !process.env.VERCEL && !process.e
     });
 }
 
+
+// GET Public Accessories
+app.get('/api/public/accessories', async (req, res) => {
+    try {
+        const accessories = await prisma.accessory.findMany({
+            orderBy: { createdAt: 'desc' }
+        });
+        res.json(accessories);
+    } catch (err: any) {
+        res.status(500).json({ error: 'Erro ao buscar acessórios' });
+    }
+});
+
+// POST New Accessory (Protected)
+app.post('/api/accessories', async (req, res) => {
+    const { owner_id, name, description, price, category, photoUrl } = req.body;
+    try {
+        const accessory = await prisma.accessory.create({
+            data: {
+                ownerId: parseInt(owner_id),
+                name,
+                description,
+                price: parseFloat(price),
+                category,
+                photoUrl
+            }
+        });
+        res.json(accessory);
+    } catch (err: any) {
+        console.error('Error creating accessory:', err);
+        res.status(500).json({ error: 'Erro ao cadastrar acessório' });
+    }
+});
+
+// GET Pets for Sale (Public)
+app.get('/api/public/pets/sale', async (req, res) => {
+    try {
+        const pets = await prisma.pet.findMany({
+            where: { intent: 'sale' },
+            orderBy: { createdAt: 'desc' }
+        });
+        res.json(pets);
+    } catch (err: any) {
+        res.status(500).json({ error: 'Erro ao buscar pets para venda' });
+    }
+});
+
 // Development setup
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.VERCEL_ENV) {
     async function setupDev() {

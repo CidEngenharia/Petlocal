@@ -23,6 +23,7 @@ model User {
   pets      Pet[]
   services  Service[]
   subscriptions Subscription[]
+  accessories   Accessory[]
 }
 
 model Pet {
@@ -102,4 +103,18 @@ model Subscription {
   updatedAt        DateTime @updatedAt
 
   user             User     @relation(fields: [userId], references: [id])
+}
+
+model Accessory {
+  id          Int      @id @default(autoincrement())
+  ownerId     Int
+  name        String
+  description String?
+  price       Float
+  category    String
+  photoUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner       User     @relation(fields: [ownerId], references: [id])
 }

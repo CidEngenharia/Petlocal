@@ -72,44 +72,38 @@ const DonationArea: React.FC<DonationAreaProps> = ({ user }) => {
                     <p className="text-stone-400 font-bold">Nenhum pet disponível no momento.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                     {pets.map(pet => (
                         <motion.div
                             key={pet.id}
-                            whileHover={{ y: -10 }}
-                            className="bg-white rounded-[40px] overflow-hidden shadow-xl border border-stone-100 group"
+                            whileHover={{ y: -8 }}
+                            className="bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-stone-100 group"
                         >
-                            <div className="relative h-64 overflow-hidden">
+                            <div className="relative aspect-square overflow-hidden bg-stone-50">
                                 <img
                                     src={pet.photoUrl || `https://picsum.photos/seed/${pet.id}/600/400`}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
-                                <div className={`absolute top-6 right-6 ${getIntentColor(pet.intent)} text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg`}>
+                                <div className={`absolute top-4 right-4 ${getIntentColor(pet.intent)} text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg`}>
                                     {getIntentLabel(pet.intent)}
                                 </div>
                             </div>
 
-                            <div className="p-8">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div>
-                                        <h3 className="text-2xl font-black text-stone-900">{pet.name}</h3>
-                                        <p className="text-stone-400 font-bold">{pet.breed || pet.species}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-xs font-black text-stone-300 uppercase tracking-widest mb-1">Localização</p>
-                                        <div className="flex items-center gap-1 text-stone-600 font-bold justify-end text-sm">
-                                            <MapPin className="w-3 h-3" />
-                                            {pet.city}, {pet.state}
-                                        </div>
-                                    </div>
+                            <div className="p-5 text-center">
+                                <h3 className="text-lg font-bold text-stone-900 group-hover:text-brand-primary transition-colors truncate">{pet.name}</h3>
+                                <p className="text-stone-400 text-xs font-bold uppercase tracking-widest mb-3 truncate">{pet.breed || pet.species}</p>
+
+                                <div className="flex items-center justify-center gap-1 text-[10px] font-black text-stone-500 uppercase tracking-tighter mb-4">
+                                    <MapPin className="w-3 h-3 text-brand-primary" />
+                                    {pet.city}, {pet.state}
                                 </div>
 
                                 <button
                                     onClick={() => setSelectedPet(pet)}
-                                    className="w-full py-4 bg-brand-bg hover:bg-brand-primary text-brand-primary hover:text-white rounded-2xl font-black transition-all flex items-center justify-center gap-2 group-btn"
+                                    className="w-full py-2.5 bg-brand-bg hover:bg-brand-primary text-brand-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                                 >
-                                    {user ? 'Ver Detalhes do Pet' : 'Entrar para ver detalhes'}
-                                    {!user && <Lock className="w-4 h-4" />}
+                                    {user ? 'Ver Detalhes' : 'Entrar'}
+                                    {!user && <Lock className="w-3 h-3" />}
                                 </button>
                             </div>
                         </motion.div>
