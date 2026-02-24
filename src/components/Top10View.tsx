@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { PawPrint, MapPin, Camera } from 'lucide-react';
+import { PawPrint, MapPin, Camera, Tag, Heart } from 'lucide-react';
 import { Pet } from '../types';
 
 const Top10View: React.FC = () => {
