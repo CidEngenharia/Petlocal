@@ -35,7 +35,8 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
         address: pet?.address || '',
         city: pet?.city || '',
         state: pet?.state || '',
-        contact: pet?.contact || ''
+        contact: pet?.contact || '',
+        intent: pet?.intent || 'none'
     });
 
     const [uploadError, setUploadError] = useState('');
@@ -62,15 +63,27 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
         if (uploadError) return;
         const url = pet ? `/api/pets/${pet.id}` : '/api/pets';
         const method = pet ? 'PUT' : 'POST';
-        const res = await fetch(url, {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ ...formData, owner_id: userId })
-        });
-        if (res.ok) onSuccess();
+        try {
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ ...formData, owner_id: userId })
+            });
+
+            if (res.ok) {
+                alert(pet ? 'Pet atualizado com sucesso!' : 'Pet cadastrado com sucesso!');
+                onSuccess();
+            } else {
+                const data = await res.json();
+                alert(`Erro: ${data.error || 'Falha na operação'}`);
+            }
+        } catch (err: any) {
+            console.error('Pet submission error:', err);
+            alert('Erro de conexão ao tentar salvar o pet.');
+        }
     };
 
     const breeds =
@@ -202,6 +215,35 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
                             value={formData.birthDate}
                             onChange={e => setFormData({ ...formData, birthDate: e.target.value })}
                         />
+                    </div>
+
+                    <div className="bg-brand-bg/30 p-6 rounded-3xl border border-brand-primary/10">
+                        <label className="block text-xs font-black uppercase tracking-[0.2em] text-brand-primary mb-4">Finalidade do Cadastro</label>
+                        <div className="grid grid-cols-2 gap-3">
+                            {[
+                                { id: 'none', label: 'Apenas Registro' },
+                                { id: 'adoption', label: 'Para Adoção' },
+                                { id: 'sale', label: 'Para Venda' },
+                                { id: 'breeding', label: 'Para Cruza' }
+                            ].map(opt => (
+                                <button
+                                    key={opt.id}
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, intent: opt.id as any })}
+                                    className={`py-3 px-4 rounded-2xl text-xs font-bold transition-all border-2 ${formData.intent === opt.id
+                                            ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20'
+                                            : 'bg-white text-stone-500 border-stone-100 hover:border-brand-primary/30'
+                                        }`}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+                        {formData.intent !== 'none' && (
+                            <p className="text-[10px] text-brand-primary/60 mt-4 italic font-medium leading-relaxed">
+                                * Ao selecionar uma finalidade, seu pet será listado publicamente na área de Doações/Busca.
+                            </p>
+                        )}
                     </div>
 
                     <div>

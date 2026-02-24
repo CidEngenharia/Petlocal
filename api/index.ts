@@ -135,15 +135,68 @@ app.get('/api/pets/:ownerId', async (req, res) => {
     res.json(pets);
 });
 
+// GET Public Pets (Adoption, Sale, Breeding)
+app.get('/api/public/pets', async (req, res) => {
+    try {
+        const pets = await prisma.pet.findMany({
+            where: {
+                intent: { in: ['adoption', 'sale', 'breeding'] }
+            },
+            include: {
+                owner: {
+                    select: {
+                        id: true,
+                        email: true
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+        res.json(pets);
+    } catch (err: any) {
+        res.status(500).json({ error: 'Erro ao buscar pets públicos' });
+    }
+});
+
 app.post('/api/pets', async (req, res) => {
-    const { owner_id, name, species, breed, birth_date, photo_url, weight, gender, address, city, state, contact } = req.body;
-    const pet = await prisma.pet.create({ data: { ownerId: parseInt(owner_id), name, species, breed, birthDate: birth_date, photoUrl: photo_url, weight, gender, address, city, state, contact } });
-    res.json(pet);
+    const { owner_id, name, species, breed, birthDate, photoUrl, weight, gender, address, city, state, contact, intent } = req.body;
+    try {
+        const pet = await prisma.pet.create({
+            data: {
+                ownerId: parseInt(owner_id),
+                name,
+                species,
+                breed,
+                birthDate,
+                photoUrl,
+                weight,
+                gender,
+                address,
+                city,
+                state,
+                contact,
+                intent: intent || 'none'
+            }
+        });
+        res.json(pet);
+    } catch (err: any) {
+        console.error('Error creating pet:', err);
+        res.status(500).json({ error: 'Erro ao cadastrar pet', details: err.message });
+    }
 });
 
 app.put('/api/pets/:id', async (req, res) => {
-    const pet = await prisma.pet.update({ where: { id: parseInt(req.params.id) }, data: req.body });
-    res.json(pet);
+    const { name, species, breed, birthDate, photoUrl, weight, gender, address, city, state, contact, intent } = req.body;
+    try {
+        const pet = await prisma.pet.update({
+            where: { id: parseInt(req.params.id) },
+            data: { name, species, breed, birthDate, photoUrl, weight, gender, address, city, state, contact, intent }
+        });
+        res.json(pet);
+    } catch (err: any) {
+        console.error('Error updating pet:', err);
+        res.status(500).json({ error: 'Erro ao atualizar pet', details: err.message });
+    }
 });
 
 app.get('/api/vaccines/:petId', async (req, res) => {

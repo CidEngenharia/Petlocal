@@ -160,7 +160,7 @@ export default function App() {
             />
           )}
 
-          {view === 'donations' && <DonationArea key="donations" />}
+          {view === 'donations' && <DonationArea key="donations" user={user} />}
 
           {view === 'shop' && <PetShop key="shop" />}
           {/* Note: In Sidebar, shop is not yet a distinct link, but let's add it to menuItems in Sidebar later or handle it here */}

@@ -39,6 +39,7 @@ model Pet {
   city       String?
   state      String?
   contact    String?
+  intent     String   @default("none") // 'none', 'adoption', 'sale', 'breeding'
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
