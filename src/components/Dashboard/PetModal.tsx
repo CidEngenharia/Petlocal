@@ -82,7 +82,10 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
             }
         } catch (err: any) {
             console.error('Pet submission error:', err);
-            alert('Erro de conexão ao tentar salvar o pet.');
+            const errorMessage = err.message === 'Failed to fetch'
+                ? 'Erro de conexão ou limite de tamanho excedido (máx 2MB).'
+                : 'Erro de conexão ao tentar salvar o pet.';
+            alert(errorMessage);
         }
     };
 
@@ -231,8 +234,8 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
                                     type="button"
                                     onClick={() => setFormData({ ...formData, intent: opt.id as any })}
                                     className={`py-3 px-4 rounded-2xl text-xs font-bold transition-all border-2 ${formData.intent === opt.id
-                                            ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20'
-                                            : 'bg-white text-stone-500 border-stone-100 hover:border-brand-primary/30'
+                                        ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20'
+                                        : 'bg-white text-stone-500 border-stone-100 hover:border-brand-primary/30'
                                         }`}
                                 >
                                     {opt.label}
