@@ -76,11 +76,31 @@ const Top10View: React.FC = () => {
                                 </div>
                             </div>
                             <div className="p-5 text-center">
-                                <h3 className="text-lg font-bold text-stone-900 group-hover:text-brand-primary transition-colors">{pet.name}</h3>
-                                <p className="text-stone-400 text-xs font-bold uppercase tracking-widest mb-3">
+                                <h3 className="text-lg font-bold text-stone-900 group-hover:text-brand-primary transition-colors mb-1">{pet.name}</h3>
+
+                                <div className="flex items-center justify-center gap-1.5 mb-3">
+                                    {pet.intent === 'sale' ? (
+                                        <div className="flex items-center gap-1 text-blue-500 text-[10px] font-black uppercase tracking-widest">
+                                            <Tag className="w-3 h-3" />
+                                            Para Venda
+                                        </div>
+                                    ) : pet.intent === 'adoption' ? (
+                                        <div className="flex items-center gap-1 text-red-500 text-[10px] font-black uppercase tracking-widest">
+                                            <Heart className="w-3 h-3 fill-current" />
+                                            Adoção
+                                        </div>
+                                    ) : (
+                                        <div className="text-stone-400 text-[10px] font-black uppercase tracking-widest">
+                                            {pet.intent === 'breeding' ? 'Cruza' : 'Encontrado'}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <p className="text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-3 truncate">
                                     {pet.breed || pet.species}
                                 </p>
-                                <div className="flex items-center justify-center gap-1 text-[10px] font-black text-stone-500 uppercase tracking-tighter">
+
+                                <div className="flex items-center justify-center gap-1 text-[9px] font-black text-stone-500 uppercase tracking-tighter">
                                     <MapPin className="w-3 h-3 text-brand-primary" />
                                     {pet.city || 'PetLocal'}, {pet.state || 'BR'}
                                 </div>
