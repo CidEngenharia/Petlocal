@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Maximize2, FileText, ShieldCheck, Award, Home as HomeIcon, Stethoscope, MapPin, MessageCircle, Instagram } from 'lucide-react';
 import { User, Pet, Service } from '../../types';

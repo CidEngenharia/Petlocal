@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { FileText, Calendar, Search, ShieldCheck, PawPrint, CheckCircle, ExternalLink, Printer, Shield, Tag, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -74,7 +74,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
 
                 <div className="relative">
                     <div className="aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl rotate-2">
-                        <img src="/hero-dog.png" alt="Happy dog" className="w-full h-full object-cover" />
+                        <img src="/hero-dog.jpg" alt="Happy dog" className="w-full h-full object-cover" />
                     </div>
                     <div className="absolute top-10 -right-5 bg-white p-6 rounded-3xl shadow-lg max-w-xs animate-bounce-slow">
                         <div className="flex items-center gap-3 mb-2">
@@ -146,7 +146,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                         </div>
 
                         <div className="w-full lg:w-[450px] aspect-square rounded-[3rem] overflow-hidden border-[12px] border-white/5 shadow-2xl group">
-                            <img src="/pet_docs_mockup.png" alt="PetLocal Documents" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                            <img src="/pet_docs_mockup.jpg" alt="PetLocal Documents" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                         </div>
                     </div>
                 </div>

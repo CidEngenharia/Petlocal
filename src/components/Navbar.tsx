@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { PawPrint, Menu, User as UserIcon, LogOut } from 'lucide-react';
 import { User } from '../types';
 

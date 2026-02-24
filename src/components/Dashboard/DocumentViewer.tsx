@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { PawPrint, Plus, CheckCircle, ChevronDown, ChevronUp, ExternalLink, Printer, Shield, Tag } from 'lucide-react';
 import { Pet } from '../../types';
 
@@ -64,7 +64,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pet, type, onClose }) =
                         </div>
                         <div className="w-full md:w-[350px] aspect-square rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 group">
                             <img
-                                src="/pet_docs_mockup.png"
+                                src="/pet_docs_mockup.jpg"
                                 alt="Documentos PetLocal"
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             />

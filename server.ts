@@ -1,19 +1,26 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+﻿import express from 'express';
+import prisma from './lib/prisma';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import Stripe from 'stripe'; // Added Stripe import
+import Stripe from 'stripe';
 
-dotenv.config();
+if (!process.env.VERCEL && !process.env.VERCEL_ENV) {
+  dotenv.config();
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key';
+
+console.log('Server Init: Checking Environment...');
+console.log('DATABASE_URL present:', !!process.env.DATABASE_URL);
+if (process.env.DATABASE_URL) {
+  console.log('DATABASE_URL starts with:', process.env.DATABASE_URL.substring(0, 20));
+}
 
 // --- STRIPE INTEGRATION ---
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -51,8 +58,9 @@ app.use(express.json());
 // API Routes
 app.get('/api/health', async (req, res) => {
   try {
-    // Basic connection check
+    console.log('Health check: Attempting DB connect...');
     await prisma.$connect();
+    console.log('Health check: DB connected successfully');
     res.json({
       status: 'ok',
       env: process.env.NODE_ENV,
@@ -72,17 +80,24 @@ app.get('/api/health', async (req, res) => {
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
   const { email, password, role } = req.body;
-  console.log(`Registration attempt for: ${email}`);
+  console.log(`Registration start for: ${email}`);
   try {
+    console.log('Hashing password...');
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({ data: { email, password: hashedPassword, role: role || 'owner' } });
-    console.log('User created successfully:', user.id);
+    console.log('Creating user in DB...');
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        role: role || 'owner'
+      }
+    });
+    console.log('User created successfully ID:', user.id);
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
     res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
   } catch (err: any) {
     console.error('CRITICAL REGISTER ERROR:', err);
     if (err.code === 'P2002') return res.status(400).json({ error: 'Este e-mail já está cadastrado.' });
-    // Return the actual error message to the client for debugging
     res.status(500).json({
       error: 'Erro no servidor ao criar conta.',
       details: err.message,
@@ -184,8 +199,9 @@ app.post('/api/documents/order', async (req, res) => {
   } catch (err: any) { res.status(500).json({ error: err.message }); }
 });
 
-// Static assets for production
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+// Static assets for production (Only for non-Vercel environments)
+// On Vercel, this is handled via vercel.json and the public directory
+if ((process.env.NODE_ENV === 'production') && !process.env.VERCEL && !process.env.VERCEL_ENV) {
   app.use(express.static(path.join(__dirname, 'dist')));
   app.get('*', (req, res) => {
     if (!req.path.startsWith('/api/')) {
@@ -197,20 +213,32 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
 // Development setup
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.VERCEL_ENV) {
   async function setupDev() {
-    console.log('Starting Vite development server...');
-    const { createServer: createViteServer } = await import('vite');
-    const vite = await createViteServer({ server: { middlewareMode: true }, appType: 'spa' });
-    app.use(vite.middlewares);
+    try {
+      console.log('Starting Vite development server...');
+      const { createServer: createViteServer } = await import('vite');
+      const vite = await createViteServer({ server: { middlewareMode: true }, appType: 'spa' });
+      app.use(vite.middlewares);
 
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
+      app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+      });
+    } catch (err) {
+      console.error('SERVER FATAL ERROR DURING STARTUP:', err);
+    }
   }
   setupDev().catch(err => {
     console.error('Vite setup failed:', err);
   });
 } else {
   console.log('Production/Vercel mode: Skipping Vite setup and port binding.');
+  // Global error handler for producton
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  });
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception thrown:', err);
+  });
 }
 
 export default app;
+
