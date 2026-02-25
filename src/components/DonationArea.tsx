@@ -155,6 +155,22 @@ const DonationArea: React.FC<DonationAreaProps> = ({ user }) => {
                                         </div>
 
                                         <div className="space-y-6 flex-grow">
+                                            <div className="flex items-center gap-4 bg-stone-50 p-4 rounded-3xl">
+                                                <div className="w-12 h-12 rounded-full overflow-hidden bg-stone-200 border-2 border-white shadow-sm">
+                                                    {selectedPet.ownerPhotoUrl ? (
+                                                        <img src={selectedPet.ownerPhotoUrl} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-stone-400">
+                                                            <PawPrint className="w-6 h-6" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Tutor Responsável</p>
+                                                    <p className="text-sm font-bold text-stone-900">Interessado em Contato</p>
+                                                </div>
+                                            </div>
+
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="p-4 bg-stone-50 rounded-2xl border border-stone-100">
                                                     <p className="text-[10px] font-black uppercase text-stone-400 mb-1">Idade</p>

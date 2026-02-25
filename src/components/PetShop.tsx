@@ -155,28 +155,29 @@ const PetShop: React.FC<PetShopProps> = ({ user, setView }) => {
                                         </div>
                                     )}
                                 </div>
-                                <div className="p-5 text-center">
-                                    <h3 className="text-lg font-bold text-stone-900 group-hover:text-brand-primary transition-colors truncate mb-1">{item.name}</h3>
+                            </div>
+                            <div className="p-5 text-center">
+                                <h3 className="text-lg font-bold text-stone-900 group-hover:text-brand-primary transition-colors truncate mb-1">{item.name}</h3>
 
-                                    <div className="text-xl font-serif font-black text-brand-primary mb-3">
-                                        {item.price ? `R$ ${item.price.toFixed(2)}` : 'Sob Consulta'}
-                                    </div>
-
-                                    {item.type === 'pet' ? (
-                                        <div className="flex items-center justify-center gap-1 text-[10px] font-black text-stone-400 uppercase tracking-widest mb-4">
-                                            <MapPin className="w-3 h-3 text-brand-primary" />
-                                            {item.city}, {item.state}
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center justify-center gap-1 text-amber-500 text-[10px] font-bold mb-4">
-                                            <Star className="w-3 h-3 fill-current" /> 5.0 (Novo)
-                                        </div>
-                                    )}
-
-                                    <button className="w-full py-2.5 bg-brand-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/10">
-                                        {item.type === 'pet' ? 'Contato' : 'Comprar'} <ArrowRight className="w-3 h-3" />
-                                    </button>
+                                <div className="text-xl font-serif font-black text-brand-primary mb-3">
+                                    {item.price ? `R$ ${item.price.toFixed(2)}` : 'Sob Consulta'}
                                 </div>
+
+                                {item.type === 'pet' ? (
+                                    <div className="flex items-center justify-center gap-1 text-[10px] font-black text-stone-400 uppercase tracking-widest mb-4">
+                                        <MapPin className="w-3 h-3 text-brand-primary" />
+                                        {item.city}, {item.state}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center gap-1 text-amber-500 text-[10px] font-bold mb-4">
+                                        <Star className="w-3 h-3 fill-current" /> 5.0 (Novo)
+                                    </div>
+                                )}
+
+                                <button className="w-full py-2.5 bg-brand-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-brand-primary/10">
+                                    {item.type === 'pet' ? 'Contato' : 'Comprar'} <ArrowRight className="w-3 h-3" />
+                                </button>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
