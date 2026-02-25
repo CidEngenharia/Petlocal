@@ -99,6 +99,13 @@ const Top10View: React.FC<Top10ViewProps> = ({ user, setView }) => {
                                         </div>
                                     )}
 
+                                    {/* Tutor Photo */}
+                                    {pet.ownerPhotoUrl && (
+                                        <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-stone-100 z-10">
+                                            <img src={pet.ownerPhotoUrl} alt="Tutor" className="w-full h-full object-cover" />
+                                        </div>
+                                    )}
+
                                     <div className="absolute top-4 left-4">
                                         <span className="bg-white/90 backdrop-blur-sm text-brand-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
                                             #{index + 1}
