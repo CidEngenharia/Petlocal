@@ -84,6 +84,14 @@ const DonationArea: React.FC<DonationAreaProps> = ({ user }) => {
                                     src={pet.photoUrl || `https://picsum.photos/seed/${pet.id}/600/400`}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
+                                {pet.photoUrl && (
+                                    <div className="absolute inset-0 bg-stone-900/5 group-hover:bg-stone-900/0 transition-colors" />
+                                )}
+                                {pet.ownerPhotoUrl && (
+                                    <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-stone-100 z-10">
+                                        <img src={pet.ownerPhotoUrl} alt="Tutor" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
                                 <div className={`absolute top-4 right-4 ${getIntentColor(pet.intent)} text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg`}>
                                     {getIntentLabel(pet.intent)}
                                 </div>
