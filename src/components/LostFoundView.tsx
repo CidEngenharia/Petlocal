@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { MapPin, Search, Heart, Info, Lock } from 'lucide-react';
+import { MapPin, Search, Heart, Info, Lock, Plus } from 'lucide-react';
 import { Pet, User } from '../types';
 
 interface LostFoundViewProps {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { PawPrint, MapPin, Camera, Tag, Heart, ShieldCheck, Search, X, Lock } from 'lucide-react';
+import { PawPrint, MapPin, Camera, Tag, Heart, ShieldCheck, Search, X, Lock, Plus } from 'lucide-react';
 import { Pet, User } from '../types';
 
 interface Top10ViewProps {
