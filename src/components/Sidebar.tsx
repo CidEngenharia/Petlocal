@@ -8,6 +8,8 @@ import {
     Users,
     Stethoscope,
     Dog,
+    Navigation,
+    Search,
     Heart,
     X
 } from 'lucide-react';
@@ -25,6 +27,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView
         { id: 'marketplace', label: 'Marketplace PET', icon: ShoppingBag },
         { id: 'shop', label: 'Pets à Venda', icon: Dog },
         { id: 'donations', label: 'Doações', icon: Heart },
+        { id: 'lost-found', label: 'Achados e Perdidos', icon: Search },
+        { id: 'tracker', label: 'Rastreador', icon: Navigation },
         { id: 'top10', label: 'Top 10 Pets', icon: ShieldCheck },
         { id: 'profile', label: 'Meu Perfil', icon: Users },
     ];

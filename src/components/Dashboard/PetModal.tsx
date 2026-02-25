@@ -225,6 +225,9 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
                         <div className="grid grid-cols-2 gap-3">
                             {[
                                 { id: 'none', label: 'Apenas Registro' },
+                                { id: 'registrado', label: 'Animal Registrado' },
+                                { id: 'lost', label: 'Animal Perdido' },
+                                { id: 'found', label: 'Animal Achado' },
                                 { id: 'adoption', label: 'Para Adoção' },
                                 { id: 'sale', label: 'Para Venda' },
                                 { id: 'breeding', label: 'Para Cruza' }

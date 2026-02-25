@@ -141,7 +141,7 @@ app.get('/api/public/pets', async (req, res) => {
     try {
         const pets = await prisma.pet.findMany({
             where: {
-                intent: { in: ['adoption', 'sale', 'breeding'] }
+                intent: { in: ['adoption', 'sale', 'breeding', 'lost', 'found', 'registrado'] }
             },
             include: {
                 owner: {
