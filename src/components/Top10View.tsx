@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { PawPrint, MapPin, Camera, Tag, Heart, ShieldCheck, Search, X, Lock, Plus } from 'lucide-react';
+import { PawPrint, MapPin, Camera, Tag, Heart, ShieldCheck, Search, X, Lock, Plus, MessageCircle } from 'lucide-react';
 import { Pet, User } from '../types';
 
 interface Top10ViewProps {
@@ -36,7 +36,7 @@ const Top10View: React.FC<Top10ViewProps> = ({ user, setView }) => {
             case 'adoption': return { label: 'Doação', icon: Heart, color: 'text-blue-500 bg-blue-50' };
             case 'sale': return { label: 'Venda', icon: Tag, color: 'text-blue-500 bg-blue-50' };
             case 'deceased': return { label: 'Falecido', icon: Plus, color: 'text-red-600 bg-red-50 border-red-100' };
-            default: return { label: 'Registro', icon: PawPrint, color: 'text-stone-400 bg-stone-50' };
+            default: return { label: 'Registrado', icon: ShieldCheck, color: 'text-green-500 bg-green-50' };
         }
     };
 
@@ -126,9 +126,30 @@ const Top10View: React.FC<Top10ViewProps> = ({ user, setView }) => {
                                         <p className="text-stone-400 text-[10px] font-bold uppercase tracking-widest mb-3 truncate">
                                             {pet.breed || pet.species}
                                         </p>
-                                        <div className="flex items-center justify-center gap-1 text-[9px] font-black text-stone-500 uppercase tracking-tighter">
-                                            <MapPin className="w-3 h-3 text-brand-primary" />
-                                            {pet.city || 'PetLocal'}, {pet.state || 'BR'}
+                                        <div className="flex flex-col gap-2 mt-4">
+                                            {['adoption', 'lost', 'found', 'breeding'].includes(pet.intent) && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const phone = pet.contact?.replace(/\D/g, '');
+                                                        if (phone) window.open(`https://wa.me/${phone}`, '_blank');
+                                                        else alert('Contato não informado pelo tutor.');
+                                                    }}
+                                                    className="w-full py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-0.5 shadow-sm px-1"
+                                                >
+                                                    <div className="flex items-center gap-1">
+                                                        WhatsApp
+                                                        <MessageCircle className="w-3 h-3" />
+                                                    </div>
+                                                    {pet.contact && (
+                                                        <span className="text-[7px] opacity-90">{pet.contact}</span>
+                                                    )}
+                                                </button>
+                                            )}
+                                            <div className="flex items-center justify-center gap-1 text-[9px] font-black text-stone-500 uppercase tracking-tighter">
+                                                <MapPin className="w-3 h-3 text-brand-primary" />
+                                                {pet.city || 'PetLocal'}, {pet.state || 'BR'}
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
@@ -216,8 +237,24 @@ const Top10View: React.FC<Top10ViewProps> = ({ user, setView }) => {
                                         </div>
                                         <div className="pt-4 border-t border-brand-primary/10">
                                             <p className="text-[10px] font-black uppercase tracking-widest text-brand-primary/60 mb-1">Contato do Tutor</p>
-                                            <p className="text-sm font-bold text-stone-900">{selectedPet.contact || 'E-mail cadastrado'}</p>
+                                            <a
+                                                href={`https://wa.me/${selectedPet.contact?.replace(/\D/g, '')}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-sm font-bold text-stone-900 hover:text-brand-primary transition-colors flex items-center gap-2"
+                                            >
+                                                {selectedPet.contact || 'E-mail cadastrado'}
+                                                {selectedPet.contact && <MessageCircle className="w-4 h-4 text-green-500" />}
+                                            </a>
                                         </div>
+                                        {selectedPet.intentDescription && (
+                                            <div className="pt-4 border-t border-brand-primary/10">
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-brand-primary/60 mb-1">Sobre o Status</p>
+                                                <p className="text-xs font-medium text-stone-600 leading-relaxed italic">
+                                                    "{selectedPet.intentDescription}"
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 

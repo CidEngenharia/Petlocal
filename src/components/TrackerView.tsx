@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Map, MapPin, Navigation, Tag, ShieldCheck, Search } from 'lucide-react';
-import { User } from '../types';
+import { User, Pet } from '../types';
+import PetMap from './PetMap';
 
 interface TrackerViewProps {
     user: User | null;
 }
 
 const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
+    const [pets, setPets] = useState<Pet[]>([]);
+
+    useEffect(() => {
+        const fetchAllPublicPets = async () => {
+            try {
+                const res = await fetch('/api/public/pets');
+                const data = await res.json();
+                setPets(data);
+            } catch (err) {
+                console.error('Error fetching pets for tracker:', err);
+            }
+        };
+        fetchAllPublicPets();
+    }, []);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -79,19 +95,15 @@ const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
                 </div>
 
                 <div className="relative aspect-square rounded-[60px] overflow-hidden shadow-2xl border-8 border-white/10 bg-stone-100">
-                    <img
-                        src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop"
-                        className="w-full h-full object-cover opacity-90"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-8 left-8 right-8">
+                    <PetMap pets={pets} />
+                    <div className="absolute inset-x-8 bottom-8 pointer-events-none">
                         <div className="flex items-center gap-4 bg-white/20 backdrop-blur-md p-6 rounded-3xl border border-white/20">
                             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg">
                                 <MapPin className="text-brand-primary w-6 h-6" />
                             </div>
                             <div>
-                                <p className="text-white text-xs font-black uppercase tracking-widest">Cristal está em</p>
-                                <p className="text-white text-lg font-bold">Bairro Costa Azul, Salvador</p>
+                                <p className="text-white text-xs font-black uppercase tracking-widest">Rastreio Ativo</p>
+                                <p className="text-white text-lg font-bold">{pets.length} Animais Localizados</p>
                             </div>
                         </div>
                     </div>

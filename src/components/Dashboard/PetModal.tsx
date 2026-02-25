@@ -37,7 +37,8 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
         city: pet?.city || '',
         state: pet?.state || '',
         contact: pet?.contact || '',
-        intent: pet?.intent || 'none'
+        intent: pet?.intent || 'none',
+        intentDescription: pet?.intentDescription || ''
     });
 
     const [uploadError, setUploadError] = useState('');
@@ -254,6 +255,19 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
                             <p className="text-[10px] text-brand-primary/60 mt-4 italic font-medium leading-relaxed">
                                 * Ao selecionar uma finalidade, seu pet será listado publicamente na área de Doações/Busca.
                             </p>
+                        )}
+                        {['adoption', 'lost', 'found', 'breeding'].includes(formData.intent) && (
+                            <div className="mt-6 animate-in fade-in slide-in-from-top-2">
+                                <label className="block text-xs font-bold uppercase tracking-widest text-brand-primary mb-2">
+                                    Informações Adicionais sobre o Status
+                                </label>
+                                <textarea
+                                    className="input-field min-h-[100px] py-3 resize-none"
+                                    placeholder="Descreva detalhes importantes (ex: local onde sumiu, temperamento para adoção, etc.)"
+                                    value={formData.intentDescription}
+                                    onChange={e => setFormData({ ...formData, intentDescription: e.target.value })}
+                                />
+                            </div>
                         )}
                     </div>
 

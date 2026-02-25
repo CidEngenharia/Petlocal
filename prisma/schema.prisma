@@ -41,7 +41,8 @@ model Pet {
   city       String?
   state      String?
   contact    String?
-  intent     String   @default("none") // 'none', 'adoption', 'sale', 'breeding', 'registrado', 'lost', 'found', 'deceased'
+  intent            String   @default("none") // 'none', 'adoption', 'sale', 'breeding', 'registrado', 'lost', 'found', 'deceased'
+  intentDescription String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

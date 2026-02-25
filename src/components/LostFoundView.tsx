@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { MapPin, Search, Heart, Info, Lock, Plus } from 'lucide-react';
+import { MapPin, Search, Heart, Info, Lock, Plus, MessageCircle } from 'lucide-react';
 import { Pet, User } from '../types';
 
 interface LostFoundViewProps {
@@ -22,7 +22,7 @@ const LostFoundView: React.FC<LostFoundViewProps> = ({ user }) => {
             const res = await fetch('/api/public/pets');
             const data = await res.json();
             // Filtrar apenas o que é relevante para Achados e Perdidos
-            const relevant = data.filter((p: any) => ['lost', 'found', 'adoption', 'registrado'].includes(p.intent));
+            const relevant = data.filter((p: any) => ['lost', 'found'].includes(p.intent));
             setPets(relevant);
         } catch (err) {
             console.error('Error fetching pets:', err);
@@ -35,9 +35,6 @@ const LostFoundView: React.FC<LostFoundViewProps> = ({ user }) => {
         switch (intent) {
             case 'lost': return 'Animal Perdido';
             case 'found': return 'Animal Achado';
-            case 'adoption': return 'Animal para Doar';
-            case 'registrado': return 'Animal Registrado';
-            case 'deceased': return 'Animal Falecido';
             default: return '';
         }
     };
@@ -124,13 +121,35 @@ const LostFoundView: React.FC<LostFoundViewProps> = ({ user }) => {
                                     {pet.address || pet.city}
                                 </div>
 
-                                <button
-                                    onClick={() => setSelectedPet(pet)}
-                                    className="w-full py-2.5 bg-brand-bg hover:bg-brand-primary text-brand-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
-                                >
-                                    {user ? 'Ver Detalhes' : 'Entrar'}
-                                    {!user && <Lock className="w-3 h-3" />}
-                                </button>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                        onClick={() => setSelectedPet(pet)}
+                                        className="w-full py-2.5 bg-brand-bg hover:bg-brand-primary text-brand-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                                    >
+                                        {user ? 'Detalhes' : 'Entrar'}
+                                        {!user && <Lock className="w-3 h-3" />}
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (!user) {
+                                                setSelectedPet(pet);
+                                                return;
+                                            }
+                                            const phone = pet.contact?.replace(/\D/g, '');
+                                            if (phone) window.open(`https://wa.me/${phone}`, '_blank');
+                                            else alert('Contato não informado pelo tutor.');
+                                        }}
+                                        className="w-full py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-0.5 shadow-sm px-1"
+                                    >
+                                        <div className="flex items-center gap-1">
+                                            WhatsApp
+                                            <MessageCircle className="w-3 h-3" />
+                                        </div>
+                                        {user && pet.contact && (
+                                            <span className="text-[8px] opacity-90">{pet.contact}</span>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     ))}

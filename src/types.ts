@@ -21,6 +21,7 @@ export interface Pet {
   state?: string;
   contact?: string;
   intent: 'none' | 'adoption' | 'sale' | 'breeding' | 'registrado' | 'lost' | 'found' | 'deceased';
+  intentDescription?: string;
   vaccines?: Vaccine[];
   documents?: PetDocument[];
 }

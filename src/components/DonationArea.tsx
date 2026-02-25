@@ -20,7 +20,9 @@ const DonationArea: React.FC<DonationAreaProps> = ({ user }) => {
         try {
             const res = await fetch('/api/public/pets');
             const data = await res.json();
-            setPets(data);
+            // Mostrar apenas animais para adoção
+            const adoptionPets = data.filter((p: any) => p.intent === 'adoption');
+            setPets(adoptionPets);
         } catch (err) {
             console.error('Error fetching public pets:', err);
         } finally {
@@ -106,13 +108,35 @@ const DonationArea: React.FC<DonationAreaProps> = ({ user }) => {
                                     {pet.city}, {pet.state}
                                 </div>
 
-                                <button
-                                    onClick={() => setSelectedPet(pet)}
-                                    className="w-full py-2.5 bg-brand-bg hover:bg-brand-primary text-brand-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
-                                >
-                                    {user ? 'Ver Detalhes' : 'Entrar'}
-                                    {!user && <Lock className="w-3 h-3" />}
-                                </button>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                        onClick={() => setSelectedPet(pet)}
+                                        className="w-full py-2.5 bg-brand-bg hover:bg-brand-primary text-brand-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                                    >
+                                        {user ? 'Detalhes' : 'Entrar'}
+                                        {!user && <Lock className="w-3 h-3" />}
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (!user) {
+                                                setSelectedPet(pet);
+                                                return;
+                                            }
+                                            const phone = pet.contact?.replace(/\D/g, '');
+                                            if (phone) window.open(`https://wa.me/${phone}`, '_blank');
+                                            else alert('Contato não informado pelo tutor.');
+                                        }}
+                                        className="w-full py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex flex-col items-center justify-center gap-0.5 shadow-sm px-1"
+                                    >
+                                        <div className="flex items-center gap-1">
+                                            WhatsApp
+                                            <MessageCircle className="w-3 h-3" />
+                                        </div>
+                                        {user && pet.contact && (
+                                            <span className="text-[8px] opacity-90">{pet.contact}</span>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     ))}

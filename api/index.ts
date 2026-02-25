@@ -216,7 +216,7 @@ app.get('/api/public/top10', async (req, res) => {
 });
 
 app.post('/api/pets', async (req, res) => {
-    const { owner_id, name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent } = req.body;
+    const { owner_id, name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent, intentDescription } = req.body;
     try {
         const pet = await prisma.pet.create({
             data: {
@@ -233,7 +233,8 @@ app.post('/api/pets', async (req, res) => {
                 city,
                 state,
                 contact,
-                intent: intent || 'none'
+                intent: intent || 'none',
+                intentDescription
             }
         });
         res.json(pet);
@@ -244,11 +245,11 @@ app.post('/api/pets', async (req, res) => {
 });
 
 app.put('/api/pets/:id', async (req, res) => {
-    const { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent } = req.body;
+    const { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent, intentDescription } = req.body;
     try {
         const pet = await prisma.pet.update({
             where: { id: parseInt(req.params.id) },
-            data: { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent }
+            data: { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent, intentDescription }
         });
         res.json(pet);
     } catch (err: any) {

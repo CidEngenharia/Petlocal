@@ -1,17 +1,25 @@
-import prisma from './lib/prisma.js';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-async function test() {
-    console.log('Testando conexão com o banco de dados...');
+async function main() {
     try {
-        await prisma.$connect();
-        console.log('Conexão bem-sucedida!');
-        const usersCount = await prisma.user.count();
-        console.log('Número de usuários:', usersCount);
-    } catch (err) {
-        console.error('Falha na conexão:', err);
+        console.log('Tentando conectar ao banco de dados...');
+        const petCount = await prisma.pet.count();
+        console.log(`Conexão bem-sucedida! Número de pets: ${petCount}`);
+
+        const firstPet = await prisma.pet.findFirst();
+        if (firstPet) {
+            console.log('Primeiro pet encontrado:', firstPet.name);
+            console.log('Campos presentes:', Object.keys(firstPet));
+        } else {
+            console.log('Nenhum pet encontrado no banco.');
+        }
+    } catch (error) {
+        console.error('Erro ao conectar ou consultar o banco de dados:');
+        console.error(error);
     } finally {
         await prisma.$disconnect();
     }
 }
 
-test();
+main();
