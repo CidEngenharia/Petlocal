@@ -29,8 +29,9 @@ const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
                     <div className="bg-white p-8 rounded-[40px] shadow-sm border border-stone-100">
                         <h3 className="text-2xl font-black mb-4 text-stone-900">Como funciona?</h3>
                         <p className="text-stone-500 leading-relaxed mb-6 font-medium">
-                            Nossa plataforma comercializa as exclusivas <strong>Tags NFC</strong> e <strong>Tags GPS</strong> para Pets.
-                            Com elas, você pode rastrear a localização do seu animal em tempo real ou permitir que quem o encontre acesse seus dados de contato instantaneamente.
+                            Nossa plataforma comercializa as exclusivas <strong>Tags NFC</strong> e <strong>Tags QRCOD</strong> personalizadas para Pets.
+                            Com elas, você pode facilitar a localização do seu animal e permitir que quem o encontre acesse seus dados de contato instantaneamente e envie uma mensagem diretamente para o whatsApp cadastrado no nosso sistema.
+                            Uma forma fácil, barata de proteger seu amigo e que funciona.
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100">
@@ -40,12 +41,12 @@ const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
                                 </div>
                                 <p className="text-xs text-blue-900/60 font-medium">Identificação digital rápida com apenas um toque no celular.</p>
                             </div>
-                            <div className="p-4 bg-green-50 rounded-2xl border border-green-100">
-                                <div className="flex items-center gap-3 mb-2 text-green-600 font-bold uppercase text-[10px] tracking-widest">
-                                    <Navigation className="w-4 h-4" />
-                                    Tag GPS
+                            <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100">
+                                <div className="flex items-center gap-3 mb-2 text-amber-600 font-bold uppercase text-[10px] tracking-widest">
+                                    <Search className="w-4 h-4" />
+                                    Tag QRCOD
                                 </div>
-                                <p className="text-xs text-green-900/60 font-medium">Rastreamento de longa distância para pets que gostam de explorar.</p>
+                                <p className="text-xs text-amber-900/60 font-medium">Acesso instantâneo aos dados do pet através da leitura do código.</p>
                             </div>
                         </div>
                     </div>
