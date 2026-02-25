@@ -172,7 +172,11 @@ app.get('/api/public/top10', async (req, res) => {
                 breed: true,
                 photoUrl: true,
                 city: true,
-                state: true
+                state: true,
+                intent: true,
+                gender: true,
+                weight: true,
+                contact: true
             }
         });
         res.json(pets);

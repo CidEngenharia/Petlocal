@@ -167,7 +167,7 @@ export default function App() {
 
           {view === 'shop' && <PetShop key="shop" user={user} setView={setView} />}
 
-          {view === 'top10' && <Top10View key="top10" />}
+          {view === 'top10' && <Top10View key="top10" user={user} />}
 
           {view === 'tracker' && <TrackerView key="tracker" user={user} />}
 
