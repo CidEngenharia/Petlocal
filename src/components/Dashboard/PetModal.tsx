@@ -12,7 +12,7 @@ interface PetModalProps {
 const DOG_BREEDS = [
     'Labrador Retriever', 'Poodle', 'Pastor Alemão', 'Golden Retriever', 'Bulldog Francês',
     'Beagle', 'Pug', 'Shih Tzu', 'Rottweiler', 'Dachshund', 'Yorkshire Terrier', 'Boxer',
-    'Salsicha', 'Husky Siberiano', 'Vira-lata (SRD)', 'Outra'
+    'Salsicha', 'Husky Siberiano', 'Pitbull', 'Vira-lata (SRD)', 'Outra'
 ];
 
 const CAT_BREEDS = [
@@ -30,6 +30,7 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
         breed: pet?.breed || '',
         birthDate: pet?.birthDate || '',
         photoUrl: pet?.photoUrl || '',
+        ownerPhotoUrl: pet?.ownerPhotoUrl || '',
         weight: pet?.weight || '',
         gender: pet?.gender || 'M',
         address: pet?.address || '',
@@ -40,20 +41,23 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
     });
 
     const [uploadError, setUploadError] = useState('');
+    const [tutorUploadError, setTutorUploadError] = useState('');
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'photoUrl' | 'ownerPhotoUrl') => {
         const file = e.target.files?.[0];
-        setUploadError('');
+        if (field === 'photoUrl') setUploadError('');
+        else setTutorUploadError('');
 
         if (file) {
             if (file.size > 2 * 1024 * 1024) {
-                setUploadError('O arquivo deve ter no máximo 2MB.');
+                if (field === 'photoUrl') setUploadError('O arquivo deve ter no máximo 2MB.');
+                else setTutorUploadError('O arquivo deve ter no máximo 2MB.');
                 return;
             }
 
             const reader = new FileReader();
             reader.onloadend = () => {
-                setFormData({ ...formData, photoUrl: reader.result as string });
+                setFormData({ ...formData, [field]: reader.result as string });
             };
             reader.readAsDataURL(file);
         }
@@ -253,27 +257,53 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
                         )}
                     </div>
 
-                    <div>
-                        <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Foto do Pet (Máx 2MB)</label>
-                        <div className="flex flex-col gap-4">
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="block w-full text-sm text-stone-500
+                    <div className="grid grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Foto do Pet (Máx 2MB)</label>
+                            <div className="flex flex-col gap-4">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleFileChange(e, 'photoUrl')}
+                                    className="block w-full text-xs text-stone-500
                   file:mr-4 file:py-2 file:px-4
                   file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
+                  file:text-xs file:font-semibold
                   file:bg-brand-bg file:text-brand-primary
                   hover:file:bg-brand-primary hover:file:text-white
                   transition-all cursor-pointer"
-                            />
-                            {uploadError && <p className="text-red-500 text-xs">{uploadError}</p>}
-                            {formData.photoUrl && (
-                                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-stone-200">
-                                    <img src={formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
-                                </div>
-                            )}
+                                />
+                                {uploadError && <p className="text-red-500 text-[10px]">{uploadError}</p>}
+                                {formData.photoUrl && (
+                                    <div className="w-20 h-20 rounded-2xl overflow-hidden border border-stone-200">
+                                        <img src={formData.photoUrl} alt="Preview" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Foto do Tutor (Máx 2MB)</label>
+                            <div className="flex flex-col gap-4">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleFileChange(e, 'ownerPhotoUrl')}
+                                    className="block w-full text-xs text-stone-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-xs file:font-semibold
+                  file:bg-brand-bg file:text-brand-primary
+                  hover:file:bg-brand-primary hover:file:text-white
+                  transition-all cursor-pointer"
+                                />
+                                {tutorUploadError && <p className="text-red-500 text-[10px]">{tutorUploadError}</p>}
+                                {formData.ownerPhotoUrl && (
+                                    <div className="w-20 h-20 rounded-2xl overflow-hidden border border-stone-200">
+                                        <img src={formData.ownerPhotoUrl} alt="Preview" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
