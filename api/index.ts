@@ -200,6 +200,7 @@ app.get('/api/public/top10', async (req, res) => {
                 species: true,
                 breed: true,
                 photoUrl: true,
+                ownerPhotoUrl: true,
                 city: true,
                 state: true,
                 intent: true,
@@ -215,7 +216,7 @@ app.get('/api/public/top10', async (req, res) => {
 });
 
 app.post('/api/pets', async (req, res) => {
-    const { owner_id, name, species, breed, birthDate, photoUrl, weight, gender, address, city, state, contact, intent } = req.body;
+    const { owner_id, name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent } = req.body;
     try {
         const pet = await prisma.pet.create({
             data: {
@@ -225,6 +226,7 @@ app.post('/api/pets', async (req, res) => {
                 breed,
                 birthDate,
                 photoUrl,
+                ownerPhotoUrl,
                 weight,
                 gender,
                 address,
@@ -242,11 +244,11 @@ app.post('/api/pets', async (req, res) => {
 });
 
 app.put('/api/pets/:id', async (req, res) => {
-    const { name, species, breed, birthDate, photoUrl, weight, gender, address, city, state, contact, intent } = req.body;
+    const { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent } = req.body;
     try {
         const pet = await prisma.pet.update({
             where: { id: parseInt(req.params.id) },
-            data: { name, species, breed, birthDate, photoUrl, weight, gender, address, city, state, contact, intent }
+            data: { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent }
         });
         res.json(pet);
     } catch (err: any) {

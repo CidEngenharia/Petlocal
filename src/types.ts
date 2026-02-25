@@ -13,6 +13,7 @@ export interface Pet {
   breed?: string;
   birthDate?: string;
   photoUrl?: string;
+  ownerPhotoUrl?: string;
   weight?: string;
   gender?: string;
   address?: string;

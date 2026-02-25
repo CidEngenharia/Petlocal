@@ -34,6 +34,7 @@ model Pet {
   breed      String?
   birthDate  String?
   photoUrl   String?
+  ownerPhotoUrl String?
   weight     String?
   gender     String?
   address    String?
