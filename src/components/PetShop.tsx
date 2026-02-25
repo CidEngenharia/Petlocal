@@ -149,12 +149,13 @@ const PetShop: React.FC<PetShopProps> = ({ user, setView }) => {
                                         <div className="bg-white/90 backdrop-blur px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-stone-900 border border-stone-100 w-fit shadow-sm">
                                             {item.breed || item.species}
                                         </div>
-                                    {item.type === 'pet' && item.ownerPhotoUrl && (
-                                        <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-stone-100 z-10">
-                                            <img src={item.ownerPhotoUrl} alt="Tutor" className="w-full h-full object-cover" />
-                                        </div>
                                     )}
                                 </div>
+                                {item.type === 'pet' && item.ownerPhotoUrl && (
+                                    <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-stone-100 z-10">
+                                        <img src={item.ownerPhotoUrl} alt="Tutor" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
                             </div>
                             <div className="p-5 text-center">
                                 <h3 className="text-lg font-bold text-stone-900 group-hover:text-brand-primary transition-colors truncate mb-1">{item.name}</h3>
