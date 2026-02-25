@@ -35,6 +35,7 @@ const Top10View: React.FC<Top10ViewProps> = ({ user, setView }) => {
             case 'lost': return { label: 'Perdido', icon: Search, color: 'text-red-500 bg-red-50' };
             case 'adoption': return { label: 'Doação', icon: Heart, color: 'text-blue-500 bg-blue-50' };
             case 'sale': return { label: 'Venda', icon: Tag, color: 'text-blue-500 bg-blue-50' };
+            case 'deceased': return { label: 'Falecido', icon: Plus, color: 'text-red-600 bg-red-50 border-red-100' };
             default: return { label: 'Registro', icon: PawPrint, color: 'text-stone-400 bg-stone-50' };
         }
     };

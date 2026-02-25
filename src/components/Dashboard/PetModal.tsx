@@ -230,7 +230,8 @@ const PetModal: React.FC<PetModalProps> = ({ userId, pet, onClose, onSuccess }) 
                                 { id: 'found', label: 'Animal Achado' },
                                 { id: 'adoption', label: 'Para Adoção' },
                                 { id: 'sale', label: 'Para Venda' },
-                                { id: 'breeding', label: 'Para Cruza' }
+                                { id: 'breeding', label: 'Para Cruza' },
+                                { id: 'deceased', label: 'Falecido' }
                             ].map(opt => (
                                 <button
                                     key={opt.id}

@@ -37,6 +37,7 @@ const LostFoundView: React.FC<LostFoundViewProps> = ({ user }) => {
             case 'found': return 'Animal Achado';
             case 'adoption': return 'Animal para Doar';
             case 'registrado': return 'Animal Registrado';
+            case 'deceased': return 'Animal Falecido';
             default: return '';
         }
     };
@@ -47,6 +48,7 @@ const LostFoundView: React.FC<LostFoundViewProps> = ({ user }) => {
             case 'found': return 'text-amber-600 bg-amber-50 border border-amber-100';
             case 'adoption': return 'text-blue-600 bg-blue-50 border border-blue-100';
             case 'registrado': return 'text-green-600 bg-green-50 border border-green-100';
+            case 'deceased': return 'text-red-700 bg-red-50 border border-red-200';
             default: return 'text-stone-500 bg-stone-50 border border-stone-100';
         }
     };

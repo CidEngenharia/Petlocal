@@ -136,12 +136,29 @@ app.get('/api/pets/:ownerId', async (req, res) => {
     res.json(pets);
 });
 
-// GET Public Pets (Adoption, Sale, Breeding)
+// GET Public 
 app.get('/api/public/pets', async (req, res) => {
     try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        // Delete pets that are deceased AND older than 30 days (cleanup)
+        await prisma.pet.deleteMany({
+            where: {
+                intent: 'deceased',
+                updatedAt: { lt: thirtyDaysAgo }
+            }
+        });
+
         const pets = await prisma.pet.findMany({
             where: {
-                intent: { in: ['adoption', 'sale', 'breeding', 'lost', 'found', 'registrado'] }
+                OR: [
+                    { intent: { in: ['adoption', 'sale', 'breeding', 'lost', 'found', 'registrado'] } },
+                    {
+                        intent: 'deceased',
+                        updatedAt: { gte: thirtyDaysAgo }
+                    }
+                ]
             },
             include: {
                 owner: {
@@ -162,7 +179,19 @@ app.get('/api/public/pets', async (req, res) => {
 // GET Top 10 Pets (Last 10 registered, public)
 app.get('/api/public/top10', async (req, res) => {
     try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
         const pets = await prisma.pet.findMany({
+            where: {
+                OR: [
+                    { intent: { in: ['adoption', 'sale', 'breeding', 'lost', 'found', 'registrado', 'none'] } },
+                    {
+                        intent: 'deceased',
+                        updatedAt: { gte: thirtyDaysAgo }
+                    }
+                ]
+            },
             take: 10,
             orderBy: { createdAt: 'desc' },
             select: {

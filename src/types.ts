@@ -19,7 +19,7 @@ export interface Pet {
   city?: string;
   state?: string;
   contact?: string;
-  intent: 'none' | 'adoption' | 'sale' | 'breeding';
+  intent: 'none' | 'adoption' | 'sale' | 'breeding' | 'registrado' | 'lost' | 'found' | 'deceased';
   vaccines?: Vaccine[];
   documents?: PetDocument[];
 }
