@@ -23,6 +23,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView }) => {
     const menuItems = [
+        { id: 'presentation', label: 'Apresentação', icon: FileText },
         { id: 'dashboard', label: 'Documentação Digital', icon: FileText },
         { id: 'marketplace', label: 'Marketplace PET', icon: ShoppingBag },
         { id: 'shop', label: 'Pets à Venda', icon: Dog },
@@ -52,11 +53,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView
                         className="fixed inset-y-0 left-0 w-72 bg-white z-[70] shadow-2xl flex flex-col"
                     >
                         <div className="p-6 border-b border-stone-100 flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                                <div className="bg-brand-primary p-1.5 rounded-lg">
-                                    <PawPrint className="text-white w-5 h-5" />
-                                </div>
-                                <span className="text-xl font-bold tracking-tight text-brand-primary">PetLocal</span>
+                            <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setView('home'); onClose(); }}>
+                                <img src="/Petlocal_logo.png" alt="PetLocal" className="h-12 w-auto object-contain" />
                             </div>
                             <button onClick={onClose} className="p-2 text-stone-400 hover:text-stone-600 transition-colors">
                                 <X className="w-6 h-6" />

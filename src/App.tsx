@@ -16,6 +16,7 @@ import Top10View from './components/Top10View';
 import TrackerView from './components/TrackerView';
 import LostFoundView from './components/LostFoundView';
 import DocumentViewer from './components/Dashboard/DocumentViewer';
+import PresentationView from './components/PresentationView';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(() => {
@@ -23,7 +24,7 @@ export default function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found'>('home');
+  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found' | 'presentation'>('home');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [pets, setPets] = useState<Pet[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -172,6 +173,8 @@ export default function App() {
           {view === 'tracker' && <TrackerView key="tracker" user={user} />}
 
           {view === 'lost-found' && <LostFoundView key="lost-found" user={user} />}
+
+          {view === 'presentation' && <PresentationView key="presentation" setView={setView} />}
 
           {view === 'profile' && !user && (
             <AuthView key="auth" onLogin={handleAuth} loading={loading} />

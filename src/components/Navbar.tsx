@@ -26,15 +26,13 @@ const Navbar: React.FC<NavbarProps> = ({ user, currentView, setView, onOpenSideb
                             className="flex items-center gap-2 cursor-pointer"
                             onClick={() => setView('home')}
                         >
-                            <div className="bg-brand-primary p-2 rounded-xl">
-                                <PawPrint className="text-white w-6 h-6" />
-                            </div>
-                            <span className="text-2xl font-bold tracking-tight text-brand-primary">PetLocal</span>
+                            <img src="/Petlocal_logo.png" alt="PetLocal" className="h-16 w-auto object-contain" />
                         </div>
                     </div>
 
                     <div className="hidden md:flex items-center gap-8">
                         <button onClick={() => setView('home')} className={`text-sm font-medium ${currentView === 'home' ? 'text-brand-primary' : 'text-stone-500'}`}>Início</button>
+                        <button onClick={() => setView('presentation')} className={`text-sm font-medium ${currentView === 'presentation' ? 'text-brand-primary' : 'text-stone-500'}`}>Apresentação</button>
                         <button onClick={() => setView('marketplace')} className={`text-sm font-medium ${currentView === 'marketplace' ? 'text-brand-primary' : 'text-stone-500'}`}>Serviços</button>
                         <button onClick={() => setView('top10')} className={`text-sm font-medium ${currentView === 'top10' ? 'text-brand-primary' : 'text-stone-500'}`}>Top 10</button>
                         {user && (
