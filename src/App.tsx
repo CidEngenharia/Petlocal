@@ -17,6 +17,7 @@ import TrackerView from './components/TrackerView';
 import LostFoundView from './components/LostFoundView';
 import DocumentViewer from './components/Dashboard/DocumentViewer';
 import PresentationView from './components/PresentationView';
+import AuthPrompt from './components/Dashboard/AuthPrompt';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(() => {
@@ -141,18 +142,22 @@ export default function App() {
         <AnimatePresence mode="wait">
           {view === 'home' && <HomeView key="home" onGetStarted={() => setView('profile')} />}
 
-          {view === 'dashboard' && user && (
-            <DashboardView
-              key="dashboard"
-              user={user}
-              pets={pets}
-              services={providerServices}
-              onRefresh={user.role === 'owner' ? fetchPets : fetchProviderServices}
-              onViewDocument={(pet, type) => {
-                setViewerPet(pet);
-                setViewerType(type);
-              }}
-            />
+          {view === 'dashboard' && (
+            user ? (
+              <DashboardView
+                key="dashboard"
+                user={user}
+                pets={pets}
+                services={providerServices}
+                onRefresh={user.role === 'owner' ? fetchPets : fetchProviderServices}
+                onViewDocument={(pet, type) => {
+                  setViewerPet(pet);
+                  setViewerType(type);
+                }}
+              />
+            ) : (
+              <AuthPrompt key="auth-prompt" setView={setView} />
+            )
           )}
 
           {view === 'marketplace' && (
