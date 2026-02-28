@@ -2,6 +2,7 @@
   id: number;
   email: string;
   role: 'owner' | 'provider';
+  photoUrl?: string;
   token?: string; // JWT token
 }
 
@@ -24,6 +25,10 @@ export interface Pet {
   intentDescription?: string;
   vaccines?: Vaccine[];
   documents?: PetDocument[];
+  owner?: {
+    photoUrl?: string;
+    email?: string;
+  };
 }
 
 export interface Vaccine {

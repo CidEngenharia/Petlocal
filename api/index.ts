@@ -96,7 +96,7 @@ app.post('/api/auth/register', async (req, res) => {
         });
         console.log('User created successfully ID:', user.id);
         const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
-        res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
+        res.json({ token, user: { id: user.id, email: user.email, role: user.role, photoUrl: user.photoUrl } });
     } catch (err: any) {
         console.error('CRITICAL REGISTER ERROR:', err);
         if (err.code === 'P2002') return res.status(400).json({ error: 'Este e-mail já está cadastrado.' });
@@ -119,7 +119,7 @@ app.post('/api/auth/login', async (req, res) => {
         }
         const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
         console.log('Login successful for:', email);
-        res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
+        res.json({ token, user: { id: user.id, email: user.email, role: user.role, photoUrl: user.photoUrl } });
     } catch (err: any) {
         console.error('CRITICAL LOGIN ERROR:', err);
         res.status(500).json({
@@ -127,6 +127,21 @@ app.post('/api/auth/login', async (req, res) => {
             details: err.message,
             code: err.code
         });
+    }
+});
+
+// Update Profile (protected)
+app.put('/api/auth/profile', async (req, res) => {
+    const { userId, photoUrl } = req.body;
+    try {
+        const user = await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data: { photoUrl }
+        });
+        res.json({ success: true, user: { id: user.id, email: user.email, role: user.role, photoUrl: user.photoUrl } });
+    } catch (err: any) {
+        console.error('Error updating profile:', err);
+        res.status(500).json({ error: 'Erro ao atualizar perfil' });
     }
 });
 
@@ -164,7 +179,8 @@ app.get('/api/public/pets', async (req, res) => {
                 owner: {
                     select: {
                         id: true,
-                        email: true
+                        email: true,
+                        photoUrl: true
                     }
                 }
             },
@@ -206,7 +222,12 @@ app.get('/api/public/top10', async (req, res) => {
                 intent: true,
                 gender: true,
                 weight: true,
-                contact: true
+                contact: true,
+                owner: {
+                    select: {
+                        photoUrl: true
+                    }
+                }
             }
         });
         res.json(pets);
@@ -258,6 +279,16 @@ app.put('/api/pets/:id', async (req, res) => {
     }
 });
 
+app.delete('/api/pets/:id', async (req, res) => {
+    try {
+        await prisma.pet.delete({ where: { id: parseInt(req.params.id) } });
+        res.json({ success: true });
+    } catch (err: any) {
+        console.error('Error deleting pet:', err);
+        res.status(500).json({ error: 'Erro ao excluir pet' });
+    }
+});
+
 app.get('/api/vaccines/:petId', async (req, res) => {
     const vaccines = await prisma.vaccine.findMany({ where: { petId: parseInt(req.params.petId) } });
     res.json(vaccines);
@@ -270,7 +301,15 @@ app.post('/api/vaccines', async (req, res) => {
 });
 
 app.get('/api/services', async (req, res) => {
-    const services = await prisma.service.findMany();
+    const services = await prisma.service.findMany({
+        include: {
+            provider: {
+                select: {
+                    photoUrl: true
+                }
+            }
+        }
+    });
     res.json(services);
 });
 
@@ -283,6 +322,30 @@ app.post('/api/services', async (req, res) => {
     const { provider_id, type, name, description, price, location, whatsapp, instagram, photo_url } = req.body;
     const service = await prisma.service.create({ data: { providerId: parseInt(provider_id), type, name, description, price: parseFloat(price), location, whatsapp, instagram, photoUrl: photo_url } });
     res.json(service);
+});
+
+app.put('/api/services/:id', async (req, res) => {
+    const { type, name, description, price, location, whatsapp, instagram, photo_url } = req.body;
+    try {
+        const service = await prisma.service.update({
+            where: { id: parseInt(req.params.id) },
+            data: { type, name, description, price: parseFloat(price), location, whatsapp, instagram, photoUrl: photo_url }
+        });
+        res.json(service);
+    } catch (err: any) {
+        console.error('Error updating service:', err);
+        res.status(500).json({ error: 'Erro ao atualizar serviço' });
+    }
+});
+
+app.delete('/api/services/:id', async (req, res) => {
+    try {
+        await prisma.service.delete({ where: { id: parseInt(req.params.id) } });
+        res.json({ success: true });
+    } catch (err: any) {
+        console.error('Error deleting service:', err);
+        res.status(500).json({ error: 'Erro ao excluir serviço' });
+    }
 });
 
 app.get('/api/documents/:petId', async (req, res) => {

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
@@ -13,59 +10,57 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      String   // 'owner', 'provider'
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  pets      Pet[]
-  services  Service[]
-  subscriptions Subscription[]
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  password      String
+  role          String
+  photoUrl      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   accessories   Accessory[]
+  pets          Pet[]
+  services      Service[]
+  subscriptions Subscription[]
 }
 
 model Pet {
-  id         Int      @id @default(autoincrement())
-  ownerId    Int
-  name       String
-  species    String
-  breed      String?
-  birthDate  String?
-  photoUrl   String?
-  ownerPhotoUrl String?
-  weight     String?
-  gender     String?
-  address    String?
-  city       String?
-  state      String?
-  contact    String?
-  intent            String   @default("none") // 'none', 'adoption', 'sale', 'breeding', 'registrado', 'lost', 'found', 'deceased'
+  id                Int        @id @default(autoincrement())
+  ownerId           Int
+  name              String
+  species           String
+  breed             String?
+  birthDate         String?
+  photoUrl          String?
+  weight            String?
+  gender            String?
+  address           String?
+  city              String?
+  state             String?
+  contact           String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  intent            String     @default("none")
+  ownerPhotoUrl     String?
   intentDescription String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  owner     User      @relation(fields: [ownerId], references: [id])
-  vaccines  Vaccine[]
-  documents Document[]
+  documents         Document[]
+  owner             User       @relation(fields: [ownerId], references: [id])
+  vaccines          Vaccine[]
 }
 
 model Vaccine {
-  id      Int      @id @default(autoincrement())
-  petId   Int
-  name    String
-  date    String
-  nextDue String?
+  id        Int      @id @default(autoincrement())
+  petId     Int
+  name      String
+  date      String
+  nextDue   String?
   createdAt DateTime @default(now())
-
-  pet     Pet      @relation(fields: [petId], references: [id])
+  pet       Pet      @relation(fields: [petId], references: [id])
 }
 
 model Service {
   id          Int      @id @default(autoincrement())
   providerId  Int
-  type        String   // 'trainer', 'hotel', 'vet', 'petsitter'
+  type        String
   name        String
   description String?
   price       Float
@@ -75,36 +70,33 @@ model Service {
   photoUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   provider    User     @relation(fields: [providerId], references: [id])
 }
 
 model Document {
   id        Int      @id @default(autoincrement())
   petId     Int
-  type      String   // 'RG', 'BirthCert'
-  status    String   @default("pending") // 'pending', 'paid', 'issued'
-  stripeId  String?  // Stripe checkout session or payment intent id
+  type      String
+  status    String   @default("pending")
+  stripeId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   pet       Pet      @relation(fields: [petId], references: [id])
 
   @@unique([petId, type])
 }
 
 model Subscription {
-  id               Int      @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   userId           Int
   stripeCustomerId String?
   stripeSubId      String?
   planId           String?
-  status           String   @default("inactive")
+  status           String    @default("inactive")
   currentPeriodEnd DateTime?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  user             User     @relation(fields: [userId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id])
 }
 
 model Accessory {
@@ -117,6 +109,5 @@ model Accessory {
   photoUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   owner       User     @relation(fields: [ownerId], references: [id])
 }

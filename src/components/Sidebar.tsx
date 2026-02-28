@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView
     const menuItems = [
         { id: 'presentation', label: 'Apresentação', icon: FileText },
         { id: 'dashboard', label: 'Documentação Digital', icon: FileText },
-        { id: 'marketplace', label: 'Marketplace PET', icon: ShoppingBag },
+        { id: 'marketplace', label: 'Serviços', icon: ShoppingBag },
         { id: 'shop', label: 'Pets à Venda', icon: Dog },
         { id: 'donations', label: 'Doações', icon: Heart },
         { id: 'lost-found', label: 'Achados e Perdidos', icon: Search },

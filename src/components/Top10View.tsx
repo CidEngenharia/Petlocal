@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { PawPrint, MapPin, Camera, Tag, Heart, ShieldCheck, Search, X, Lock, Plus, MessageCircle } from 'lucide-react';
+import { PawPrint, MapPin, Camera, Tag, Heart, ShieldCheck, Search, X, Lock, Plus, MessageCircle, User as UserIcon } from 'lucide-react';
 import { Pet, User } from '../types';
 
 interface Top10ViewProps {
@@ -99,12 +99,14 @@ const Top10View: React.FC<Top10ViewProps> = ({ user, setView }) => {
                                         </div>
                                     )}
 
-                                    {/* Tutor Photo */}
-                                    {pet.ownerPhotoUrl && (
-                                        <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-stone-100 z-10">
-                                            <img src={pet.ownerPhotoUrl} alt="Tutor" className="w-full h-full object-cover" />
-                                        </div>
-                                    )}
+                                    {/* Tutor Photo Overlay */}
+                                    <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full border-2 border-white shadow-md overflow-hidden bg-brand-primary/10 z-10 flex items-center justify-center">
+                                        {(pet as any).owner?.photoUrl || pet.ownerPhotoUrl ? (
+                                            <img src={(pet as any).owner?.photoUrl || pet.ownerPhotoUrl} alt="Tutor" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <UserIcon className="w-5 h-5 text-brand-primary" />
+                                        )}
+                                    </div>
 
                                     <div className="absolute top-4 left-4">
                                         <span className="bg-white/90 backdrop-blur-sm text-brand-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">

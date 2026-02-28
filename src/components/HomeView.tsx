@@ -60,8 +60,8 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
 
                     <div className="mt-16 grid grid-cols-3 gap-8 border-t border-stone-200 pt-8">
                         {[
-                            { label: "Pets Registrados", val: "10k+" },
-                            { label: "Profissionais", val: "500+" },
+                            { label: "Pets Registrados", val: "1k+" },
+                            { label: "Profissionais", val: "100+" },
                             { label: "Avaliação Média", val: "4.9/5" }
                         ].map((stat, i) => (
                             <div key={i}>
@@ -169,7 +169,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                         />
                         <FAQItem
                             question="Posso imprimir em casa?"
-                            answer="Sim! Os documentos são emitidos em formato A4 real, prontos para impressão em qualquer impressora doméstica ou gráfica rápida."
+                            answer="Sim! Os documentos são emitidos em formato A4 real, prontos para impressão em qualquer impressora doméstica ou gráfica rápida, porém os documentos geados e impressos por nós, serão com papeis especiais fotográficos e com qualidade premium, que poderá ser entregue ao cliente pessoalmente após gerados. No entanto fica a critério do cliente imprimir por conta própria ou receber o documento pessoalmente ou via correios."
                         />
                         <FAQItem
                             question="Como funciona a Tag de Identificação?"
@@ -177,7 +177,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                         />
                         <FAQItem
                             question="Qual o custo total?"
-                            answer="O Combo Completo (RG + Certidão + Vacina) custa R$ 29,90. Itens individuais como QR Code de Identifcação custam R$ 15,90 cada. O Chaveiro Tag de Identificação (físico) custa R$ 29,90 separadamente."
+                            answer="O Combo Completo (RG + Certidão + Cartão de Vacina) custa R$ 29,90. Os Itens individuais como RG, Certidão de Nascimento , Cartão de vacina e QR Code de Identifcação custam cada um R$ 15,90, se solicitado individualmente. O Chaveiro brasão Tag QRCode de Identificação (físico) custa R$ 29,90 separadamente."
                         />
                     </div>
                 </div>

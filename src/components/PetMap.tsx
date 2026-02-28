@@ -6,14 +6,24 @@ interface PetMapProps {
     pets: Pet[];
 }
 
-const AnyReactComponent = ({ text, photoUrl, lat, lng }: { text: string, photoUrl?: string, lat: number, lng: number, key?: any }) => (
+const AnyReactComponent = ({ text, photoUrl, ownerPhotoUrl, lat, lng }: { text: string, photoUrl?: string, ownerPhotoUrl?: string, lat: number, lng: number, key?: any }) => (
     <div className="relative group cursor-pointer">
-        <div className="w-12 h-12 rounded-full border-4 border-white shadow-xl overflow-hidden bg-brand-primary transform group-hover:scale-125 transition-transform">
+        <div className="w-12 h-12 rounded-full border-4 border-white shadow-xl overflow-hidden bg-brand-primary transform group-hover:scale-125 transition-transform relative">
             <img
                 src={photoUrl || 'https://via.placeholder.com/150'}
                 alt={text}
                 className="w-full h-full object-cover"
             />
+            {/* Owner Avatar Overlay */}
+            <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full border border-white shadow-md overflow-hidden bg-stone-100 z-10">
+                {ownerPhotoUrl ? (
+                    <img src={ownerPhotoUrl} alt="Owner" className="w-full h-full object-cover" />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-brand-primary/10">
+                        <span className="text-[6px] font-black text-brand-primary">T</span>
+                    </div>
+                )}
+            </div>
         </div>
         <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded-lg shadow-md border border-stone-100 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
             <p className="text-[10px] font-black uppercase tracking-widest text-stone-900">{text}</p>
@@ -55,6 +65,7 @@ const PetMap: React.FC<PetMapProps> = ({ pets }) => {
                         lng={pet.lng}
                         text={pet.name}
                         photoUrl={pet.photoUrl}
+                        ownerPhotoUrl={pet.owner?.photoUrl || pet.ownerPhotoUrl}
                     />
                 ))}
             </GoogleMapReact>

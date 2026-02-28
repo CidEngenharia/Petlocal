@@ -6,9 +6,10 @@ import PetMap from './PetMap';
 
 interface TrackerViewProps {
     user: User | null;
+    setView: (view: any) => void;
 }
 
-const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
+const TrackerView: React.FC<TrackerViewProps> = ({ user, setView }) => {
     const [pets, setPets] = useState<Pet[]>([]);
 
     useEffect(() => {
@@ -69,11 +70,11 @@ const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
 
                     {!user ? (
                         <div className="bg-brand-primary p-8 rounded-[40px] text-white shadow-xl shadow-brand-primary/20">
-                            <h4 className="text-xl font-black mb-2">Já possui uma Tag?</h4>
-                            <p className="text-white/80 mb-6 font-medium">Faça login para vincular o hardware ao seu pet e ativar o rastreamento em tempo real.</p>
+                            <h4 className="text-xl font-black mb-2">Já adquiriu o Brasão QRcode do seu Pet?</h4>
+                            <p className="text-white/80 mb-6 font-medium">Faça login para vincular ou adquirir o brasão QRcode, ativar o rastreamento e proteger o seu amiguinho.</p>
                             <button
-                                onClick={() => window.location.href = '#profile'}
-                                className="bg-white text-brand-primary px-8 py-4 rounded-2xl font-black w-full"
+                                onClick={() => setView('profile')}
+                                className="bg-white text-brand-primary px-8 py-4 rounded-2xl font-black w-full hover:bg-stone-50 transition-colors"
                             >
                                 Entrar no Painel de Controle
                             </button>
@@ -86,7 +87,13 @@ const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
                                     <span className="text-sm font-medium">Status do Sistema</span>
                                     <span className="text-xs bg-green-500 px-2 py-1 rounded-full text-white font-black uppercase tracking-widest">Ativo</span>
                                 </div>
-                                <button className="w-full py-4 bg-brand-primary text-white rounded-2xl font-black flex items-center justify-center gap-2">
+                                <button
+                                    onClick={() => setView('dashboard')}
+                                    className="w-full py-4 bg-brand-primary text-white rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-brand-primary/90 transition-colors"
+                                >
+                                    Abrir Painel de Controle
+                                </button>
+                                <button className="w-full py-4 bg-white/5 text-white/60 rounded-2xl font-black flex items-center justify-center gap-2 border border-white/10 hover:bg-white/10 transition-colors">
                                     <Search className="w-5 h-5" /> Localizar Meus Pets
                                 </button>
                             </div>
@@ -106,6 +113,46 @@ const TrackerView: React.FC<TrackerViewProps> = ({ user }) => {
                                 <p className="text-white text-lg font-bold">{pets.length} Animais Localizados</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* NEW EXPLANATORY SECTION WITH IMAGE */}
+            <div className="bg-stone-50 rounded-[3rem] p-8 md:p-16 border border-stone-200">
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 className="text-3xl font-black mb-6 text-stone-900">Segurança em Tempo Real</h3>
+                        <p className="text-stone-600 text-lg leading-relaxed mb-8">
+                            Nossa tecnologia de <strong>Localização Inteligente</strong> permite que qualquer pessoa que encontre seu pet acesse instantaneamente seus dados de segurança.
+                        </p>
+                        <ul className="space-y-6">
+                            <li className="flex gap-4 items-start">
+                                <div className="bg-green-100 p-3 rounded-2xl text-green-600">
+                                    <ShieldCheck className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-stone-900 mb-1">Proteção Garantida</h4>
+                                    <p className="text-stone-500">Dados criptografados e acesso restrito para sua total privacidade.</p>
+                                </div>
+                            </li>
+                            <li className="flex gap-4 items-start">
+                                <div className="bg-blue-100 p-3 rounded-2xl text-blue-600">
+                                    <MapPin className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-stone-900 mb-1">Rastreamento por WhatsApp</h4>
+                                    <p className="text-stone-500">Envio de localização em tempo real.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="relative group">
+                        <div className="absolute -inset-4 bg-brand-primary/5 rounded-[3rem] blur-2xl group-hover:bg-brand-primary/10 transition-colors" />
+                        <img
+                            src="/rastreapet_5.jpg"
+                            alt="Demonstração de Rastreamento"
+                            className="relative w-full h-auto rounded-[3rem] shadow-2xl transform hover:scale-[1.02] transition-transform duration-500"
+                        />
                     </div>
                 </div>
             </div>

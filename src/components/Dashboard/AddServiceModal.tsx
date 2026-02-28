@@ -1,22 +1,24 @@
 ﻿import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { Service } from '../../types';
 
 interface AddServiceModalProps {
     providerId: number;
+    service?: Service;
     onClose: () => void;
     onSuccess: () => void;
 }
 
-const AddServiceModal: React.FC<AddServiceModalProps> = ({ providerId, onClose, onSuccess }) => {
+const AddServiceModal: React.FC<AddServiceModalProps> = ({ providerId, service, onClose, onSuccess }) => {
     const [formData, setFormData] = useState({
-        type: 'trainer',
-        name: '',
-        description: '',
-        price: '',
-        location: '',
-        whatsapp: '',
-        instagram: '',
-        photoUrl: ''
+        type: service?.type || 'trainer',
+        name: service?.name || '',
+        description: service?.description || '',
+        price: service?.price.toString() || '',
+        location: service?.location || '',
+        whatsapp: service?.whatsapp || '',
+        instagram: service?.instagram || '',
+        photoUrl: service?.photoUrl || ''
     });
 
     const [uploadError, setUploadError] = useState('');
@@ -38,15 +40,26 @@ const AddServiceModal: React.FC<AddServiceModalProps> = ({ providerId, onClose, 
     };
 
     const handleSubmit = async () => {
-        const res = await fetch('/api/services', {
-            method: 'POST',
+        const url = service ? `/api/services/${service.id}` : '/api/services';
+        const method = service ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+            method,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
-            body: JSON.stringify({ ...formData, provider_id: providerId, price: parseFloat(formData.price) || 0 })
+            body: JSON.stringify({
+                ...formData,
+                provider_id: providerId,
+                price: parseFloat(formData.price) || 0,
+                photo_url: formData.photoUrl // Backend expects photo_url
+            })
         });
-        if (res.ok) onSuccess();
+        if (res.ok) {
+            alert(service ? 'Serviço atualizado!' : 'Serviço publicado!');
+            onSuccess();
+        }
     };
 
     return (
@@ -56,14 +69,14 @@ const AddServiceModal: React.FC<AddServiceModalProps> = ({ providerId, onClose, 
                 animate={{ scale: 1, opacity: 1 }}
                 className="bg-white rounded-[40px] w-full max-w-lg p-10 shadow-2xl overflow-y-auto max-h-[90vh]"
             >
-                <h2 className="text-3xl font-serif mb-8">Divulgar Seu Serviço</h2>
+                <h2 className="text-3xl font-serif mb-8">{service ? 'Editar Serviço' : 'Divulgar Seu Serviço'}</h2>
                 <div className="space-y-6">
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Tipo de Serviço</label>
                         <select
                             className="input-field"
                             value={formData.type}
-                            onChange={e => setFormData({ ...formData, type: e.target.value })}
+                            onChange={e => setFormData({ ...formData, type: e.target.value as any })}
                         >
                             <option value="trainer">Adestrador</option>
                             <option value="hotel">Hotel Pet</option>
@@ -159,7 +172,9 @@ const AddServiceModal: React.FC<AddServiceModalProps> = ({ providerId, onClose, 
 
                     <div className="flex gap-4 pt-4">
                         <button onClick={onClose} className="btn-secondary flex-1">Cancelar</button>
-                        <button onClick={handleSubmit} className="btn-primary flex-1">Publicar (Taxa de Divulgação)</button>
+                        <button onClick={handleSubmit} className="btn-primary flex-1">
+                            {service ? 'Salvar Alterações' : 'Publicar (Taxa de Divulgação)'}
+                        </button>
                     </div>
                     <p className="text-[10px] text-center text-stone-400 uppercase tracking-widest">Ao publicar, você concorda com a taxa de manutenção da plataforma.</p>
                 </div>

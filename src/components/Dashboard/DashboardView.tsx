@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Maximize2, FileText, ShieldCheck, Award, Home as HomeIcon, Stethoscope, MapPin, MessageCircle, Instagram } from 'lucide-react';
+import { Plus, Maximize2, FileText, ShieldCheck, Award, Home as HomeIcon, Stethoscope, MapPin, MessageCircle, Instagram, User as UserIcon, Pencil, Trash2 } from 'lucide-react';
 import { User, Pet, Service } from '../../types';
 import PetModal from './PetModal';
 import AddServiceModal from './AddServiceModal';
@@ -18,10 +18,44 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
     const [showPetModal, setShowPetModal] = useState(false);
     const [showServiceModal, setShowServiceModal] = useState(false);
     const [editingPet, setEditingPet] = useState<Pet | null>(null);
+    const [editingService, setEditingService] = useState<Service | null>(null);
     const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
     const [expandedImage, setExpandedImage] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const isOwner = user.role === 'owner';
+
+    const handleDeletePet = async (petId: number) => {
+        if (!confirm('Deseja realmente excluir este pet e todos os seus documentos?')) return;
+        setIsLoading(true);
+        try {
+            const res = await fetch(`/api/pets/${petId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (res.ok) onRefresh();
+        } catch (err) {
+            alert('Erro ao excluir pet.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteService = async (serviceId: number) => {
+        if (!confirm('Deseja realmente excluir este serviço?')) return;
+        setIsLoading(true);
+        try {
+            const res = await fetch(`/api/services/${serviceId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (res.ok) onRefresh();
+        } catch (err) {
+            alert('Erro ao excluir serviço.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <motion.div
@@ -44,6 +78,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
                             setEditingPet(null);
                             setShowPetModal(true);
                         } else {
+                            setEditingService(null);
                             setShowServiceModal(true);
                         }
                     }}
@@ -75,6 +110,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
                                     >
                                         <Maximize2 className="w-6 h-6" />
                                     </button>
+
+                                    {/* Owner Avatar Overlay */}
+                                    <div className="absolute bottom-2 right-2 w-8 h-8 rounded-full border-2 border-white shadow-lg overflow-hidden bg-brand-primary/10 flex items-center justify-center">
+                                        {user.photoUrl ? (
+                                            <img src={user.photoUrl} alt="Owner" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <UserIcon className="w-4 h-4 text-brand-primary" />
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-col justify-between py-2 flex-grow">
@@ -91,12 +135,32 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
                                         </p>
                                     </div>
 
-                                    <div className="flex gap-2">
-                                        <div className="bg-stone-100 p-2 rounded-lg" title="RG">
-                                            <FileText className="w-4 h-4 text-stone-500" />
+                                    <div className="flex gap-2 items-center">
+                                        <div className="bg-stone-100 p-2 rounded-lg cursor-pointer hover:bg-brand-primary/10 hover:text-brand-primary transition-colors" title="RG" onClick={(e) => { e.stopPropagation(); onViewDocument(pet, 'RG'); }}>
+                                            <FileText className="w-4 h-4" />
+                                        </div>
+                                        <div className="bg-stone-100 p-2 rounded-lg cursor-pointer hover:bg-brand-primary/10 hover:text-brand-primary transition-colors" title="Certidão" onClick={(e) => { e.stopPropagation(); onViewDocument(pet, 'BirthCert'); }}>
+                                            <ShieldCheck className="w-4 h-4" />
                                         </div>
                                         <div className="bg-stone-100 p-2 rounded-lg" title="Vacinas">
-                                            <ShieldCheck className="w-4 h-4 text-stone-500" />
+                                            <Award className="w-4 h-4 text-stone-300" />
+                                        </div>
+
+                                        <div className="flex-grow text-right flex justify-end gap-2">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setEditingPet(pet); setShowPetModal(true); }}
+                                                className="p-2 hover:bg-brand-primary/10 rounded-xl transition-colors"
+                                                title="Editar"
+                                            >
+                                                <Pencil className="w-4 h-4 text-stone-400 hover:text-brand-primary" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); handleDeletePet(pet.id); }}
+                                                className="p-2 hover:bg-red-50 rounded-xl transition-colors"
+                                                title="Excluir"
+                                            >
+                                                <Trash2 className="w-4 h-4 text-stone-400 hover:text-red-500" />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -132,6 +196,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
                                     {service.type === 'vet' && <Stethoscope className="w-3 h-3" />}
                                     {service.type === 'trainer' ? 'Adestrador' : service.type === 'petsitter' ? 'PetSitter' : service.type === 'hotel' ? 'Hotel' : 'Veterinário'}
                                 </div>
+
+                                {/* Provider Avatar Overlay */}
+                                <div className="absolute bottom-2 right-2 w-8 h-8 rounded-full border-2 border-white shadow-lg overflow-hidden bg-brand-primary/10 flex items-center justify-center">
+                                    {user.photoUrl ? (
+                                        <img src={user.photoUrl} alt="Provider" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <UserIcon className="w-4 h-4 text-brand-primary" />
+                                    )}
+                                </div>
                             </div>
                             <div className="p-6">
                                 <div className="flex justify-between items-start mb-2">
@@ -144,17 +217,46 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
                                 </div>
                                 <p className="text-stone-500 text-sm mb-6 line-clamp-2">{service.description}</p>
 
-                                <div className="flex gap-2">
+                                <div className="flex items-center gap-3">
                                     {service.whatsapp && (
-                                        <div className="flex-1 bg-green-50 text-green-600 py-2 rounded-xl flex items-center justify-center gap-2 text-xs font-bold">
-                                            <MessageCircle className="w-3 h-3" /> {service.whatsapp}
-                                        </div>
+                                        <a
+                                            href={`https://wa.me/${service.whatsapp.replace(/\D/g, '')}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="bg-green-50 text-green-600 p-3 rounded-xl hover:bg-green-100 transition-colors"
+                                            title="WhatsApp"
+                                        >
+                                            <MessageCircle className="w-5 h-5" />
+                                        </a>
                                     )}
                                     {service.instagram && (
-                                        <div className="bg-stone-50 text-stone-600 p-2 rounded-xl">
-                                            <Instagram className="w-4 h-4" />
-                                        </div>
+                                        <a
+                                            href={`https://instagram.com/${service.instagram.replace('@', '')}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="bg-stone-50 text-stone-600 p-3 rounded-xl hover:bg-stone-100 transition-colors"
+                                            title="Instagram"
+                                        >
+                                            <Instagram className="w-5 h-5" />
+                                        </a>
                                     )}
+
+                                    <div className="flex items-center gap-2 pl-2 border-l border-stone-100 ml-auto">
+                                        <button
+                                            onClick={() => { setEditingService(service); setShowServiceModal(true); }}
+                                            className="p-2.5 bg-brand-primary/10 text-brand-primary rounded-xl hover:bg-brand-primary/20 transition-colors border border-brand-primary/10 flex items-center justify-center font-black uppercase tracking-widest text-[9px]"
+                                            title="Editar"
+                                        >
+                                            <Pencil className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteService(service.id)}
+                                            className="p-2.5 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition-colors border border-red-100 flex items-center justify-center font-black uppercase tracking-widest text-[9px]"
+                                            title="Excluir"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -189,6 +291,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
             {showServiceModal && (
                 <AddServiceModal
                     providerId={user.id}
+                    service={editingService || undefined}
                     onClose={() => setShowServiceModal(false)}
                     onSuccess={() => {
                         setShowServiceModal(false);

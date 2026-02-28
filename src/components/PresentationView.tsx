@@ -108,7 +108,7 @@ const PresentationView: React.FC<PresentationViewProps> = ({ setView }) => {
                     </ul>
                 </div>
                 <div className="bg-brand-bg rounded-[2rem] p-8 shadow-inner border border-stone-100">
-                    <img src="/pet_564A.jpg" alt="Localização Inteligente Pet" className="rounded-xl shadow-2xl w-full h-auto object-cover transform rotate-1 hover:rotate-0 transition-transform duration-500" />
+                    <img src="/rastreapet_5.jpg" alt="Localização Inteligente Pet" className="rounded-xl shadow-2xl w-full h-auto object-cover transform rotate-1 hover:rotate-0 transition-transform duration-500" />
                 </div>
             </section>
 
