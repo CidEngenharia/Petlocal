@@ -77,7 +77,10 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pet, type, onClose }) =
                                 <span className="text-yellow-400 font-black">RG PET e CERTIDÃO</span>
                             </p>
                             <div className="flex flex-wrap gap-4">
-                                <button className="bg-white text-indigo-700 px-8 py-4 rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-xl flex items-center gap-2">
+                                <button
+                                    onClick={() => window.open('https://buy.stripe.com/00w4gs3yvc3y0j8fWOf3a0c', '_blank')}
+                                    className="bg-white text-indigo-700 px-8 py-4 rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-xl flex items-center gap-2"
+                                >
                                     Registrar Agora <ExternalLink className="w-5 h-5" />
                                 </button>
                                 <div className="flex items-center gap-2 text-white/80 font-bold">

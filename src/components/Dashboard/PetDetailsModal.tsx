@@ -31,18 +31,46 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
         setDocuments(await dRes.json());
     };
 
+    const STRIPE_LINKS: Record<string, string> = {
+        'COMBO': 'https://buy.stripe.com/00w4gs3yvc3y0j8fWOf3a0c',
+        'TAG_KEYCHAIN': 'https://buy.stripe.com/00wcMYfhd0kQ0j8bGyf3a07',
+        'RG': 'https://buy.stripe.com/8x29AM2ur0kQgi6dOGf3a0b',
+        'BIRTH_CERT': 'https://buy.stripe.com/aFacMY0mj8Rmd5U9yqf3a0a',
+        'VACCINE_CARD': 'https://buy.stripe.com/eVq14gfhdebG8PE25Yf3a09',
+        'QR_CODE': 'https://buy.stripe.com/dRm28kd952sYgi69yqf3a08'
+    };
+
     const orderDoc = async (type: string) => {
-        const res = await fetch('/api/documents/order', {
+        const url = STRIPE_LINKS[type];
+        if (url) {
+            window.open(url, '_blank');
+        }
+    };
+
+    const [isAddingVaccine, setIsAddingVaccine] = useState(false);
+    const [newVaccine, setNewVaccine] = useState({ name: '', date: '', nextDue: '' });
+
+    const handleSaveVaccine = async () => {
+        if (!newVaccine.name || !newVaccine.date) return;
+        const token = localStorage.getItem('token');
+        const res = await fetch('/api/vaccines', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ pet_id: pet.id, type })
+            body: JSON.stringify({
+                pet_id: pet.id,
+                name: newVaccine.name,
+                date: newVaccine.date,
+                next_due: newVaccine.nextDue
+            })
         });
-        const data = await res.json();
-        if (data.url) {
-            window.location.href = data.url;
+
+        if (res.ok) {
+            setIsAddingVaccine(false);
+            setNewVaccine({ name: '', date: '', nextDue: '' });
+            fetchData();
         }
     };
 
@@ -172,10 +200,66 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
                         <div className="space-y-4">
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-xl font-bold">Histórico de Vacinação</h3>
-                                <button className="btn-secondary py-2 px-4 text-sm flex items-center gap-2">
-                                    <Plus className="w-4 h-4" /> Registrar Dose
-                                </button>
+                                {!isAddingVaccine && (
+                                    <button
+                                        onClick={() => setIsAddingVaccine(true)}
+                                        className="btn-secondary py-2 px-4 text-sm flex items-center gap-2"
+                                    >
+                                        <Plus className="w-4 h-4" /> Registrar Dose
+                                    </button>
+                                )}
                             </div>
+
+                            {isAddingVaccine && (
+                                <div className="bg-white p-6 rounded-3xl border border-brand-primary/20 shadow-lg mb-8 animate-in fade-in zoom-in duration-300">
+                                    <h4 className="font-bold mb-4">Nova Dose</h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Nome da Vacina</label>
+                                            <input
+                                                type="text"
+                                                className="input-field py-2"
+                                                placeholder="Ex: V10, Raiva..."
+                                                value={newVaccine.name}
+                                                onChange={e => setNewVaccine({ ...newVaccine, name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Data da Dose</label>
+                                            <input
+                                                type="date"
+                                                className="input-field py-2"
+                                                value={newVaccine.date}
+                                                onChange={e => setNewVaccine({ ...newVaccine, date: e.target.value })}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Próxima Dose</label>
+                                            <input
+                                                type="date"
+                                                className="input-field py-2"
+                                                value={newVaccine.nextDue}
+                                                onChange={e => setNewVaccine({ ...newVaccine, nextDue: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end gap-3 mt-6">
+                                        <button
+                                            onClick={() => setIsAddingVaccine(false)}
+                                            className="px-4 py-2 text-sm font-bold text-stone-400 hover:text-stone-600 transition-colors"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            onClick={handleSaveVaccine}
+                                            disabled={!newVaccine.name || !newVaccine.date}
+                                            className="btn-primary py-2 px-6 text-sm"
+                                        >
+                                            Salvar Dose
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
 
                             {vaccines.length > 0 ? (
                                 <div className="space-y-3">
