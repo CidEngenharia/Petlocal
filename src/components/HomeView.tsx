@@ -110,9 +110,9 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                             <h2 className="text-5xl md:text-7xl font-serif font-medium mb-4 leading-[0.9]">
                                 Seu <span className="text-[#22c55e] italic">Pet</span> não é Registrado?
                             </h2>
-                            <span className="bg-[#22c55e] text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block italic">Nós podemos te ajudar</span>
+                            <span className="bg-[#22c55e] text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block italic">Nós podemos te ajudar!</span>
                             <p className="text-2xl text-stone-300 font-bold mb-10 leading-tight">
-                                <span className="text-yellow-400 font-black">COMBO: RG + Certidão + Vacina</span> por apenas R$ 29,90
+                                <span className="text-yellow-400 font-black">COMBO: RG + Certidão + Carteira de Vacina</span> por apenas R$ 29,90; e peça também o Chaveiro Tag QRcode por R$29,90.
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">

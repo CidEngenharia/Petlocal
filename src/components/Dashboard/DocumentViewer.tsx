@@ -72,9 +72,9 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pet, type, onClose }) =
                             <h1 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
                                 Seu Pet não é Registrado?
                             </h1>
-                            <span className="bg-white/20 text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block">Nós podemos te ajudar</span>
-                            <p className="text-xl text-indigo-100 font-bold mb-8">
-                                <span className="text-yellow-400 font-black">RG PET e CERTIDÃO</span>
+                            <span className="bg-white/20 text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-8 inline-block">Nós podemos te ajudar!</span>
+                            <p className="text-xl text-indigo-100 font-bold mb-8 leading-tight">
+                                <span className="text-yellow-400 font-black">COMBO: RG + Certidão + Carteira de Vacina</span> por apenas R$ 29,90; e peça também o Chaveiro Tag QRcode por R$29,90.
                             </p>
                             <div className="flex flex-wrap gap-4">
                                 <button
