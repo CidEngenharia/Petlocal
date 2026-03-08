@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #222;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .img-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 50px;
+            background: #fff;
+        }
+
+        img {
+            display: block;
+            max-width: 800px;
+            height: auto;
+        }
+
+        .overlay {
+            position: absolute;
+            background: rgba(255, 0, 0, 0.5);
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Clique para definir caixas</h1>
+    <div id="output"
+        style="position:fixed; top:10px; right:10px; background:black; padding:10px; font-size:12px; white-space:pre-wrap; max-height:90vh; overflow:auto; z-index:999;">
+    </div>
+
+    <div class="img-container" id="rg-container">
+        <h2>RG</h2>
+        <img src="bg_rg.jpg" id="rg">
+    </div>
+
+    <div class="img-container" id="bc-container">
+        <h2>BirthCert</h2>
+        <img src="bg_birthcert.jpg" id="bc">
+    </div>
+
+    <div class="img-container" id="vc-container">
+        <h2>Vaccination</h2>
+        <img src="bg_vaccination.jpg" id="vc">
+    </div>
+
+    <script>
+        let output = '';
+        function log(msg) {
+            output += msg + '\n';
+            document.getElementById('output').textContent = output;
+        }
+
+        document.querySelectorAll('img').forEach(img => {
+            let start = null;
+            img.draggable = false;
+            img.addEventListener('mousedown', e => {
+                const r = img.getBoundingClientRect();
+                start = {
+                    x: ((e.clientX - r.left) / r.width) * 100,
+                    y: ((e.clientY - r.top) / r.height) * 100
+                };
+            });
+            img.addEventListener('mouseup', e => {
+                if (!start) return;
+                const r = img.getBoundingClientRect();
+                const end = {
+                    x: ((e.clientX - r.left) / r.width) * 100,
+                    y: ((e.clientY - r.top) / r.height) * 100
+                };
+                const x = Math.min(start.x, end.x);
+                const y = Math.min(start.y, end.y);
+                const w = Math.abs(start.x - end.x);
+                const h = Math.abs(start.y - end.y);
+
+                let div = document.createElement('div');
+                div.className = 'overlay';
+                div.style.left = x + '%';
+                div.style.top = y + '%';
+                div.style.width = w + '%';
+                div.style.height = h + '%';
+                img.parentElement.appendChild(div);
+
+                log(`${img.id}: left: ${x.toFixed(2)}%, top: ${y.toFixed(2)}%, width: ${w.toFixed(2)}%, height: ${h.toFixed(2)}%`);
+                start = null;
+            });
+        });
+    </script>
+</body>
+
+</html>

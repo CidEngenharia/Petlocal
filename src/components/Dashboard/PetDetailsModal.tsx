@@ -6,7 +6,7 @@ import { Pet, Vaccine, PetDocument } from '../../types';
 interface PetDetailsModalProps {
     pet: Pet;
     onClose: () => void;
-    onViewDocument: (type: 'RG' | 'BirthCert') => void;
+    onViewDocument: (type: 'RG' | 'BirthCert' | 'Vaccination') => void;
     onEdit: () => void;
 }
 
@@ -20,9 +20,12 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
     }, [pet]);
 
     const fetchData = async () => {
+        const token = localStorage.getItem('token');
+        const headers = { 'Authorization': `Bearer ${token}` };
+
         const [vRes, dRes] = await Promise.all([
-            fetch(`/api/vaccines/${pet.id}`),
-            fetch(`/api/documents/${pet.id}`)
+            fetch(`/api/vaccines/${pet.id}`, { headers }),
+            fetch(`/api/documents/${pet.id}`, { headers })
         ]);
         setVaccines(await vRes.json());
         setDocuments(await dRes.json());
@@ -143,7 +146,7 @@ const PetDetailsModal: React.FC<PetDetailsModalProps> = ({ pet, onClose, onViewD
                                     price="R$ 15,90"
                                     status={documents.find(d => d.type === 'VACCINE_CARD')?.status}
                                     onOrder={() => orderDoc('VACCINE_CARD')}
-                                    onView={() => onViewDocument('RG')} // Link to generic viewer for now
+                                    onView={() => onViewDocument('Vaccination')}
                                 />
                                 <DocumentCard
                                     title="QR Code Identificação"

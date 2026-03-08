@@ -1,12 +1,13 @@
 ﻿import express from 'express';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import Stripe from 'stripe';
+import stripe from '../lib/stripe';
+import cors from 'cors';
+import { authenticateJWT, AuthRequest } from '../lib/auth';
 
 if (!process.env.VERCEL && !process.env.VERCEL_ENV) {
     dotenv.config();
@@ -23,10 +24,10 @@ if (process.env.DATABASE_URL) {
     console.log('DATABASE_URL starts with:', process.env.DATABASE_URL.substring(0, 20));
 }
 
-// --- STRIPE INTEGRATION ---
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+// --- STRIPE INTEGRATION --- (Imported from lib/stripe)
 
 const app = express();
+app.use(cors());
 const PORT = Number(process.env.PORT) || 3000;
 
 // Stripe Webhook needs raw body, must be BEFORE express.json()
@@ -41,14 +42,21 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
 
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object as any;
+        console.log('Stripe Webhook: Checkout Completed', session.id);
         const { petId, type, userId, category } = session.metadata;
-        if (category === 'document') {
+
+        if (category === 'document' && petId) {
             const id = parseInt(petId);
-            await prisma.document.upsert({
-                where: { petId_type: { petId: id, type } },
-                update: { status: 'paid' },
-                create: { petId: id, type, status: 'paid' }
-            });
+            try {
+                await prisma.document.upsert({
+                    where: { petId_type: { petId: id, type } },
+                    update: { status: 'paid', stripeId: session.id },
+                    create: { petId: id, type, status: 'paid', stripeId: session.id }
+                });
+                console.log(`Document ${type} for Pet ${id} updated to PAID`);
+            } catch (dbErr) {
+                console.error('Database Error in Webhook:', dbErr);
+            }
         }
     }
     res.json({ received: true });
@@ -131,11 +139,15 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Update Profile (protected)
-app.put('/api/auth/profile', async (req, res) => {
-    const { userId, photoUrl } = req.body;
+app.put('/api/auth/profile', authenticateJWT, async (req: AuthRequest, res) => {
+    const { photoUrl } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) return res.status(401).json({ error: 'Não autorizado' });
+
     try {
         const user = await prisma.user.update({
-            where: { id: parseInt(userId) },
+            where: { id: userId },
             data: { photoUrl }
         });
         res.json({ success: true, user: { id: user.id, email: user.email, role: user.role, photoUrl: user.photoUrl } });
@@ -146,8 +158,18 @@ app.put('/api/auth/profile', async (req, res) => {
 });
 
 // Pets, Vaccines, Services, Documents
-app.get('/api/pets/:ownerId', async (req, res) => {
-    const pets = await prisma.pet.findMany({ where: { ownerId: parseInt(req.params.ownerId) }, include: { vaccines: true, documents: true } });
+app.get('/api/pets/:ownerId', authenticateJWT, async (req: AuthRequest, res) => {
+    const ownerId = parseInt(req.params.ownerId);
+
+    // Security: Only allow user to view their own pets
+    if (req.user?.id !== ownerId) {
+        return res.status(403).json({ error: 'Acesso negado' });
+    }
+
+    const pets = await prisma.pet.findMany({
+        where: { ownerId },
+        include: { vaccines: true, documents: true }
+    });
     res.json(pets);
 });
 
@@ -236,12 +258,16 @@ app.get('/api/public/top10', async (req, res) => {
     }
 });
 
-app.post('/api/pets', async (req, res) => {
-    const { owner_id, name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent, intentDescription } = req.body;
+app.post('/api/pets', authenticateJWT, async (req: AuthRequest, res) => {
+    const { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent, intentDescription } = req.body;
+    const ownerId = req.user?.id;
+
+    if (!ownerId) return res.status(401).json({ error: 'Não autorizado' });
+
     try {
         const pet = await prisma.pet.create({
             data: {
-                ownerId: parseInt(owner_id),
+                ownerId,
                 name,
                 species,
                 breed,
@@ -265,22 +291,30 @@ app.post('/api/pets', async (req, res) => {
     }
 });
 
-app.put('/api/pets/:id', async (req, res) => {
+app.put('/api/pets/:id', authenticateJWT, async (req: AuthRequest, res) => {
     const { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent, intentDescription } = req.body;
     try {
-        const pet = await prisma.pet.update({
+        // Check ownership
+        const pet = await prisma.pet.findUnique({ where: { id: parseInt(req.params.id) } });
+        if (!pet || pet.ownerId !== req.user?.id) return res.status(403).json({ error: 'Não autorizado' });
+
+        const updatedPet = await prisma.pet.update({
             where: { id: parseInt(req.params.id) },
             data: { name, species, breed, birthDate, photoUrl, ownerPhotoUrl, weight, gender, address, city, state, contact, intent, intentDescription }
         });
-        res.json(pet);
+        res.json(updatedPet);
     } catch (err: any) {
         console.error('Error updating pet:', err);
         res.status(500).json({ error: 'Erro ao atualizar pet', details: err.message });
     }
 });
 
-app.delete('/api/pets/:id', async (req, res) => {
+app.delete('/api/pets/:id', authenticateJWT, async (req: AuthRequest, res) => {
     try {
+        // Check ownership
+        const pet = await prisma.pet.findUnique({ where: { id: parseInt(req.params.id) } });
+        if (!pet || pet.ownerId !== req.user?.id) return res.status(403).json({ error: 'Não autorizado' });
+
         await prisma.pet.delete({ where: { id: parseInt(req.params.id) } });
         res.json({ success: true });
     } catch (err: any) {
@@ -289,15 +323,36 @@ app.delete('/api/pets/:id', async (req, res) => {
     }
 });
 
-app.get('/api/vaccines/:petId', async (req, res) => {
-    const vaccines = await prisma.vaccine.findMany({ where: { petId: parseInt(req.params.petId) } });
-    res.json(vaccines);
+app.get('/api/vaccines/:petId', authenticateJWT, async (req: AuthRequest, res) => {
+    try {
+        const petId = parseInt(req.params.petId);
+        const pet = await prisma.pet.findUnique({ where: { id: petId } });
+
+        if (!pet || pet.ownerId !== req.user?.id) {
+            return res.status(403).json({ error: 'Não autorizado' });
+        }
+
+        const vaccines = await prisma.vaccine.findMany({ where: { petId } });
+        res.json(vaccines);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao buscar vacinas' });
+    }
 });
 
-app.post('/api/vaccines', async (req, res) => {
+app.post('/api/vaccines', authenticateJWT, async (req: AuthRequest, res) => {
     const { pet_id, name, date, next_due } = req.body;
-    const vaccine = await prisma.vaccine.create({ data: { petId: parseInt(pet_id), name, date, nextDue: next_due } });
-    res.json(vaccine);
+    try {
+        const petId = parseInt(pet_id);
+        const pet = await prisma.pet.findUnique({ where: { id: petId } });
+        if (!pet || pet.ownerId !== req.user?.id) return res.status(403).json({ error: 'Não autorizado' });
+
+        const vaccine = await prisma.vaccine.create({
+            data: { petId, name, date, nextDue: next_due }
+        });
+        res.json(vaccine);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao cadastrar vacina' });
+    }
 });
 
 app.get('/api/services', async (req, res) => {
@@ -318,28 +373,43 @@ app.get('/api/services/provider/:providerId', async (req, res) => {
     res.json(services);
 });
 
-app.post('/api/services', async (req, res) => {
-    const { provider_id, type, name, description, price, location, whatsapp, instagram, photo_url } = req.body;
-    const service = await prisma.service.create({ data: { providerId: parseInt(provider_id), type, name, description, price: parseFloat(price), location, whatsapp, instagram, photoUrl: photo_url } });
-    res.json(service);
+app.post('/api/services', authenticateJWT, async (req: AuthRequest, res) => {
+    const { type, name, description, price, location, whatsapp, instagram, photo_url } = req.body;
+    const providerId = req.user?.id;
+    if (!providerId) return res.status(401).json({ error: 'Não autorizado' });
+
+    try {
+        const service = await prisma.service.create({
+            data: { providerId, type, name, description, price: parseFloat(price), location, whatsapp, instagram, photoUrl: photo_url }
+        });
+        res.json(service);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao cadastrar serviço' });
+    }
 });
 
-app.put('/api/services/:id', async (req, res) => {
+app.put('/api/services/:id', authenticateJWT, async (req: AuthRequest, res) => {
     const { type, name, description, price, location, whatsapp, instagram, photo_url } = req.body;
     try {
-        const service = await prisma.service.update({
+        const service = await prisma.service.findUnique({ where: { id: parseInt(req.params.id) } });
+        if (!service || service.providerId !== req.user?.id) return res.status(403).json({ error: 'Não autorizado' });
+
+        const updatedService = await prisma.service.update({
             where: { id: parseInt(req.params.id) },
             data: { type, name, description, price: parseFloat(price), location, whatsapp, instagram, photoUrl: photo_url }
         });
-        res.json(service);
+        res.json(updatedService);
     } catch (err: any) {
         console.error('Error updating service:', err);
         res.status(500).json({ error: 'Erro ao atualizar serviço' });
     }
 });
 
-app.delete('/api/services/:id', async (req, res) => {
+app.delete('/api/services/:id', authenticateJWT, async (req: AuthRequest, res) => {
     try {
+        const service = await prisma.service.findUnique({ where: { id: parseInt(req.params.id) } });
+        if (!service || service.providerId !== req.user?.id) return res.status(403).json({ error: 'Não autorizado' });
+
         await prisma.service.delete({ where: { id: parseInt(req.params.id) } });
         res.json({ success: true });
     } catch (err: any) {
@@ -348,12 +418,27 @@ app.delete('/api/services/:id', async (req, res) => {
     }
 });
 
-app.get('/api/documents/:petId', async (req, res) => {
-    const docs = await prisma.document.findMany({ where: { petId: parseInt(req.params.petId) } });
-    res.json(docs);
+app.get('/api/documents/:petId', authenticateJWT, async (req: AuthRequest, res) => {
+    try {
+        const petId = parseInt(req.params.petId);
+        const pet = await prisma.pet.findUnique({ where: { id: petId } });
+
+        if (!pet || pet.ownerId !== req.user?.id) {
+            return res.status(403).json({ error: 'Não autorizado' });
+        }
+
+        const docs = await prisma.document.findMany({ where: { petId } });
+        res.json(docs);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao buscar documentos' });
+    }
 });
-app.post('/api/documents/order', async (req, res) => {
-    const { pet_id, type, user_id } = req.body;
+app.post('/api/documents/order', authenticateJWT, async (req: AuthRequest, res) => {
+    const { pet_id, type } = req.body;
+    const userId = req.user?.id;
+
+    if (!userId) return res.status(401).json({ error: 'Não autorizado' });
+
     try {
         let productName = '';
         let amount = 0;
@@ -401,7 +486,7 @@ app.post('/api/documents/order', async (req, res) => {
             mode: 'payment',
             success_url: `${req.headers.origin}/?success=true`,
             cancel_url: `${req.headers.origin}/?canceled=true`,
-            metadata: { petId: pet_id.toString(), type, userId: user_id?.toString() || '0', category: 'document' }
+            metadata: { petId: pet_id.toString(), type, userId: userId.toString() || '0', category: 'document' }
         });
         res.json({ url: session.url });
     } catch (err: any) { res.status(500).json({ error: err.message }); }
@@ -431,12 +516,15 @@ app.get('/api/public/accessories', async (req, res) => {
 });
 
 // POST New Accessory (Protected)
-app.post('/api/accessories', async (req, res) => {
-    const { owner_id, name, description, price, category, photoUrl } = req.body;
+app.post('/api/accessories', authenticateJWT, async (req: AuthRequest, res) => {
+    const { name, description, price, category, photoUrl } = req.body;
+    const ownerId = req.user?.id;
+    if (!ownerId) return res.status(401).json({ error: 'Não autorizado' });
+
     try {
         const accessory = await prisma.accessory.create({
             data: {
-                ownerId: parseInt(owner_id),
+                ownerId,
                 name,
                 description,
                 price: parseFloat(price),

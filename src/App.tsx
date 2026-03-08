@@ -33,7 +33,7 @@ export default function App() {
   const [providerServices, setProviderServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
   const [viewerPet, setViewerPet] = useState<Pet | null>(null);
-  const [viewerType, setViewerType] = useState<'RG' | 'BirthCert' | null>(null);
+  const [viewerType, setViewerType] = useState<'RG' | 'BirthCert' | 'Vaccination' | null>(null);
 
   // Auth logic
   const handleAuth = async (email: string, password: string, role: 'owner' | 'provider', isRegister: boolean) => {
@@ -154,7 +154,7 @@ export default function App() {
                 pets={pets}
                 services={providerServices}
                 onRefresh={user.role === 'owner' ? fetchPets : fetchProviderServices}
-                onViewDocument={(pet, type) => {
+                onViewDocument={(pet, type: 'RG' | 'BirthCert' | 'Vaccination') => {
                   setViewerPet(pet);
                   setViewerType(type);
                 }}
@@ -196,7 +196,7 @@ export default function App() {
               pets={pets}
               services={providerServices}
               onRefresh={user.role === 'owner' ? fetchPets : fetchProviderServices}
-              onViewDocument={(pet, type) => {
+              onViewDocument={(pet, type: 'RG' | 'BirthCert' | 'Vaccination') => {
                 setViewerPet(pet);
                 setViewerType(type);
               }}

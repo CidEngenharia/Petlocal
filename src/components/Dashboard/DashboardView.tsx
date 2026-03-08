@@ -11,7 +11,7 @@ interface DashboardViewProps {
     pets: Pet[];
     services: Service[];
     onRefresh: () => void;
-    onViewDocument: (pet: Pet, type: 'RG' | 'BirthCert') => void;
+    onViewDocument: (pet: Pet, type: 'RG' | 'BirthCert' | 'Vaccination') => void;
 }
 
 const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onRefresh, onViewDocument }) => {
@@ -33,9 +33,16 @@ const DashboardView: React.FC<DashboardViewProps> = ({ user, pets, services, onR
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
-            if (res.ok) onRefresh();
+            if (res.ok) {
+                onRefresh();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                alert(`Erro ao excluir pet: ${data.error || 'Rejeitado pelo Servidor'}`);
+                console.error(data);
+            }
         } catch (err) {
-            alert('Erro ao excluir pet.');
+            alert('Falha na comunicação com o servidor.');
+            console.error(err);
         } finally {
             setIsLoading(false);
         }

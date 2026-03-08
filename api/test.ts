@@ -1,9 +1,14 @@
+import { Request, Response } from 'express';
 import prisma from '../lib/prisma';
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req: Request, res: Response) {
     try {
-        const envKeys = Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('URL') || k.includes('SECRET'));
+        const envKeys = Object.keys(process.env).filter(k =>
+            k.includes('DATABASE') || k.includes('URL') || k.includes('SECRET') || k.includes('STRIPE')
+        );
+
         await prisma.$connect();
+
         res.status(200).json({
             status: 'API is working',
             envKeys,

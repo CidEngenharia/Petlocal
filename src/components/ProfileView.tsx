@@ -11,7 +11,7 @@ interface ProfileViewProps {
     pets: Pet[];
     services: Service[];
     onRefresh: () => void;
-    onViewDocument: (pet: Pet, type: 'RG' | 'BirthCert') => void;
+    onViewDocument: (pet: Pet, type: 'RG' | 'BirthCert' | 'Vaccination') => void;
 }
 
 const ProfileView: React.FC<ProfileViewProps> = ({ user, pets, services, onRefresh, onViewDocument }) => {
@@ -32,10 +32,16 @@ const ProfileView: React.FC<ProfileViewProps> = ({ user, pets, services, onRefre
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
-            if (res.ok) onRefresh();
-            else alert(`Erro ao excluir ${type}.`);
+            if (res.ok) {
+                onRefresh();
+            } else {
+                const data = await res.json().catch(() => ({}));
+                alert(`Erro ao excluir ${type}: ${data.error || 'Rejeitado pelo servidor.'}`);
+                console.error(data);
+            }
         } catch (err) {
-            alert(`Erro ao excluir ${type}.`);
+            alert(`Falha na comunicação com o servidor ao excluir ${type}.`);
+            console.error(err);
         }
     };
     return (
