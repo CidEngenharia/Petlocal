@@ -165,19 +165,19 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                     <div className="divide-y divide-stone-200 border-y border-stone-200">
                         <FAQItem
                             question="Como os documentos do meu pet são enviados?"
-                            answer="Ao finalizar o registro do seu pet você será redirecionado à área 'Meus Pets' no seu Dashboard, onde poderá visualizar e imprimir os documentos instantaneamente."
+                            answer="Ao finalizar o registro do seu pet você será redirecionado a área 'Meus Pets' onde poderá ver os documentos, e adicionar outros pets conhecidos à família do seu pet, ir para o perfil do seu pet e outras opções."
                         />
                         <FAQItem
-                            question="Posso imprimir em casa?"
-                            answer="Sim! Os documentos são emitidos em formato A4 real, prontos para impressão em qualquer impressora doméstica ou gráfica rápida, porém os documentos geados e impressos por nós, serão com papeis especiais fotográficos e com qualidade premium, que poderá ser entregue ao cliente pessoalmente após gerados. No entanto fica a critério do cliente imprimir por conta própria ou receber o documento pessoalmente ou via correios."
+                            question="Como imprimir os documentos do meu pet?"
+                            answer="Você poderá vizualisar os documentos , porém nós nos encarregamos de gerar em qualidade premium e enviar os documentos ao seus tutores. Os documentos já são emitidos em tamanho real de documento de identidade, certidão de nascimento e carteira de vacinação. Os documentos serão gerados em papel fotográfico fosco."
                         />
                         <FAQItem
-                            question="Como funciona a Tag de Identificação?"
-                            answer="É um QR Code exclusivo vinculado ao perfil digital do seu pet. Se ele se perder, quem encontrar pode escanear e ver seus contatos de segurança imediatamente."
+                            question="Porque não posso imprimir os documentos gerados pelo sistema?"
+                            answer="Desabilitamos essa função para mantermos um padrão de qualidade PetLocal, pois nossa impressão seguirá uma linha de qualidade com papeis especiais e padrão premium. Removemos a função de impressão autonoma, pois os usuários estavam imprimindo em papíes convecionais e com baixa qualidade de impressão. Deixamos essa funconalidade apenas para uso interno. Com isso garantimos uma melhor qualidade nas impressões."
                         />
                         <FAQItem
-                            question="Qual o custo total?"
-                            answer="O Combo Completo (RG + Certidão + Cartão de Vacina) custa R$ 29,90. Os Itens individuais como RG, Certidão de Nascimento , Cartão de vacina e QR Code de Identifcação custam cada um R$ 15,90, se solicitado individualmente. O Chaveiro brasão Tag QRCode de Identificação (físico) custa R$ 29,90 separadamente."
+                            question="Caso eu queira adiquirir o Chaveiro Tag (Físico) de Identificação como faço?"
+                            answer="Caso deseje confecionar o Chaveiro Tag de Identificação que será confeccionado em formato de brasão com o nome do Pet e o QRcod , é simples, basta no cadastro selecionar o link de pagamento para quais serviços deseja. Os documentos e o Chaveiro Tag pode ser solictados sepadamente. No caso dos documemtos pode ser solicitado o combo com os 3 documentos ( RG, Certidão de Nascimento e Carteira de Vacinação.) Porém o chaveiro é solictado separamente."
                         />
                     </div>
                 </div>

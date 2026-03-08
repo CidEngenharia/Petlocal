@@ -262,19 +262,19 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ pet, type, onClose }) =
                     <div className="space-y-2 relative z-10">
                         <FAQItem
                             question="Como os documentos do meu pet são enviados?"
-                            answer="Ao finalizar o registro do seu pet você será redirecionado a área 'Meus Pets' onde poderá ver e imprimir os documentos, adicionar outros pets conhecidos à família do seu pet, ir para o perfil do seu pet e outras opções."
+                            answer="Ao finalizar o registro do seu pet você será redirecionado a área 'Meus Pets' onde poderá ver os documentos, e adicionar outros pets conhecidos à família do seu pet, ir para o perfil do seu pet e outras opções."
                         />
                         <FAQItem
                             question="Como imprimir os documentos do meu pet?"
-                            answer="Você pode imprimir os documentos em folha A4 normal em qualquer tipo de impressora. Os documentos já são emitidos em tamanho real de documento de identidade, certidão de nascimento e tag de identificação."
+                            answer="Você poderá vizualisar os documentos , porém nós nos encarregamos de gerar em qualidade premium e enviar os documentos ao seus tutores. Os documentos já são emitidos em tamanho real de documento de identidade, certidão de nascimento e carteira de vacinação. Os documentos serão gerados em papel fotográfico fosco."
                         />
                         <FAQItem
-                            question="O que é a Tag de Identificação?"
-                            answer="Ao registar o seu pet, o seu pet terá um perfil com sua foto e informações. A Tag de Identificação possui um QR Code que pode ser lido de qualquer celular por qualquer pessoa. Em caso de imprevistos e o pet se perca, após a leitura da Tag a pessoa irá para o perfil do seu pet podendo encontrar seus donos."
+                            question="Porque não posso imprimir os documentos gerados pelo sistema?"
+                            answer="Desabilitamos essa função para mantermos um padrão de qualidade PetLocal, pois nossa impressão seguirá uma linha de qualidade com papeis especiais e padrão premium. Removemos a função de impressão autonoma, pois os usuários estavam imprimindo em papíes convecionais e com baixa qualidade de impressão. Deixamos essa funconalidade apenas para uso interno. Com isso garantimos uma melhor qualidade nas impressões."
                         />
                         <FAQItem
-                            question="Qual é o valor para emitir os documentos do meu pet?"
-                            answer="Atualmente você pode registrar e emitir os documentos do seu pet por apenas R$ 29,90. Este valor inclui todos os documentos digitais prontos para impressão."
+                            question="Caso eu queira adiquirir o Chaveiro Tag (Físico) de Identificação como faço?"
+                            answer="Caso deseje confecionar o Chaveiro Tag de Identificação que será confeccionado em formato de brasão com o nome do Pet e o QRcod , é simples, basta no cadastro selecionar o link de pagamento para quais serviços deseja. Os documentos e o Chaveiro Tag pode ser solictados sepadamente. No caso dos documemtos pode ser solicitado o combo com os 3 documentos ( RG, Certidão de Nascimento e Carteira de Vacinação.) Porém o chaveiro é solictado separamente."
                         />
                     </div>
                 </div>
