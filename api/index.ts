@@ -1,13 +1,13 @@
 ﻿import express from 'express';
-import prisma from '../lib/prisma';
+import prisma from '../lib/prisma.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import stripe from '../lib/stripe';
+import stripe from '../lib/stripe.js';
 import cors from 'cors';
-import { authenticateJWT, AuthRequest } from '../lib/auth';
+import { authenticateJWT, AuthRequest } from '../lib/auth.js';
 
 if (!process.env.VERCEL && !process.env.VERCEL_ENV) {
     dotenv.config();
