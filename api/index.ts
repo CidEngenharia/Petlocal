@@ -287,6 +287,90 @@ app.get('/api/admin/system-data', authenticateJWT, async (req: AuthRequest, res)
     }
 });
 
+// Admin CRUD - Users
+app.put('/api/admin/users/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    const { email, role, photoUrl } = req.body;
+    try {
+        const user = await prisma.user.update({
+            where: { id: parseInt(req.params.id) },
+            data: { email, role, photoUrl }
+        });
+        res.json(user);
+    } catch (err) { res.status(500).json({ error: 'Erro ao atualizar usuário' }); }
+});
+
+app.delete('/api/admin/users/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    try {
+        await prisma.user.delete({ where: { id: parseInt(req.params.id) } });
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ error: 'Erro ao deletar usuário' }); }
+});
+
+// Admin CRUD - Pets
+app.put('/api/admin/pets/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    const { name, species, breed, birthDate, intent, city, state, contact } = req.body;
+    try {
+        const pet = await prisma.pet.update({
+            where: { id: parseInt(req.params.id) },
+            data: { name, species, breed, birthDate, intent, city, state, contact }
+        });
+        res.json(pet);
+    } catch (err) { res.status(500).json({ error: 'Erro ao atualizar pet' }); }
+});
+
+app.delete('/api/admin/pets/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    try {
+        await prisma.pet.delete({ where: { id: parseInt(req.params.id) } });
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ error: 'Erro ao deletar pet' }); }
+});
+
+// Admin CRUD - Services
+app.delete('/api/admin/services/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    try {
+        await prisma.service.delete({ where: { id: parseInt(req.params.id) } });
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ error: 'Erro ao deletar serviço' }); }
+});
+
+app.put('/api/admin/services/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    const { name, type, price, description } = req.body;
+    try {
+        const service = await prisma.service.update({
+            where: { id: parseInt(req.params.id) },
+            data: { name, type, price: parseFloat(price), description }
+        });
+        res.json(service);
+    } catch (err) { res.status(500).json({ error: 'Erro ao atualizar serviço' }); }
+});
+
+// Admin CRUD - Accessories
+app.delete('/api/admin/accessories/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    try {
+        await prisma.accessory.delete({ where: { id: parseInt(req.params.id) } });
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ error: 'Erro ao deletar acessório' }); }
+});
+
+app.put('/api/admin/accessories/:id', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') return res.status(403).json({ error: 'Acesso negado' });
+    const { name, category, price, description } = req.body;
+    try {
+        const accessory = await prisma.accessory.update({
+            where: { id: parseInt(req.params.id) },
+            data: { name, category, price: parseFloat(price), description }
+        });
+        res.json(accessory);
+    } catch (err) { res.status(500).json({ error: 'Erro ao atualizar acessório' }); }
+});
+
 // GET Top 10 Pets (Last 10 registered, public)
 app.get('/api/public/top10', async (req, res) => {
     try {

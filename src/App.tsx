@@ -156,7 +156,14 @@ export default function App() {
 
           {view === 'admin' && (
             user?.role === 'global_admin' ? (
-              <AdminDashboardView key="admin" />
+              <AdminDashboardView
+                key="admin"
+                onViewDocument={(pet, type) => {
+                  setViewerPet(pet);
+                  setViewerType(type);
+                }}
+                setView={setView}
+              />
             ) : (
               <AuthPrompt key="auth-prompt" setView={setView} />
             )
