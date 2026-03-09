@@ -19,6 +19,7 @@ import LostFoundView from './components/LostFoundView';
 import DocumentViewer from './components/Dashboard/DocumentViewer';
 import PresentationView from './components/PresentationView';
 import AuthPrompt from './components/Dashboard/AuthPrompt';
+import AdminDashboardView from './components/Admin/AdminDashboardView';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(() => {
@@ -26,7 +27,7 @@ export default function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found' | 'presentation'>('home');
+  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found' | 'presentation' | 'admin'>('home');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [pets, setPets] = useState<Pet[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -36,7 +37,7 @@ export default function App() {
   const [viewerType, setViewerType] = useState<'RG' | 'BirthCert' | 'Vaccination' | null>(null);
 
   // Auth logic
-  const handleAuth = async (email: string, password: string, role: 'owner' | 'provider', isRegister: boolean) => {
+  const handleAuth = async (email: string, password: string, role: 'owner' | 'provider' | 'global_admin', isRegister: boolean) => {
     setLoading(true);
     const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
     try {
@@ -61,10 +62,15 @@ export default function App() {
         if (isRegister) {
           alert('Conta criada com sucesso! Redirecionando...');
         }
+
+        if (data.user.role === 'global_admin') {
+          alert('Você está logado como Admin do Sistema');
+        }
+
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
-        setView('dashboard');
+        setView(data.user.role === 'global_admin' ? 'admin' : 'dashboard');
       } else {
         alert(data.error || (isRegister ? 'Erro ao criar conta' : 'E-mail ou senha incorretos'));
       }
@@ -87,7 +93,7 @@ export default function App() {
     if (user) {
       if (user.role === 'owner') {
         fetchPets();
-      } else {
+      } else if (user.role === 'provider') {
         fetchProviderServices();
       }
       fetchServices();
@@ -129,6 +135,7 @@ export default function App() {
           else setView(v);
         }}
         currentView={view}
+        user={user}
       />
 
       <Navbar
@@ -136,6 +143,7 @@ export default function App() {
         currentView={view}
         setView={(v) => {
           if (v === 'dashboard' && user?.role === 'provider') setView('marketplace');
+          else if (v === 'dashboard' && user?.role === 'global_admin') setView('admin');
           else setView(v);
         }}
         onOpenSidebar={() => setIsSidebarOpen(true)}
@@ -145,6 +153,14 @@ export default function App() {
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           {view === 'home' && <HomeView key="home" onGetStarted={() => setView('profile')} />}
+
+          {view === 'admin' && (
+            user?.role === 'global_admin' ? (
+              <AdminDashboardView key="admin" />
+            ) : (
+              <AuthPrompt key="auth-prompt" setView={setView} />
+            )
+          )}
 
           {view === 'dashboard' && (
             user ? (

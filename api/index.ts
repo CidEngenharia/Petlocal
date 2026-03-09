@@ -214,6 +214,79 @@ app.get('/api/public/pets', async (req, res) => {
     }
 });
 
+// GET Admin System Data (Protected & Exclusive)
+app.get('/api/admin/system-data', authenticateJWT, async (req: AuthRequest, res) => {
+    if (req.user?.role !== 'global_admin') {
+        return res.status(403).json({ error: 'Acesso negado. Somente administradores globais.' });
+    }
+
+    try {
+        const [usersCount, petsCount, servicesCount, accessoriesCount, documentsCount] = await Promise.all([
+            prisma.user.count(),
+            prisma.pet.count(),
+            prisma.service.count(),
+            prisma.accessory.count(),
+            prisma.document.count()
+        ]);
+
+        const [pets, services, accessories, users] = await Promise.all([
+            prisma.pet.findMany({
+                include: {
+                    owner: { select: { email: true, photoUrl: true } },
+                    documents: true,
+                    vaccines: true
+                },
+                orderBy: { createdAt: 'desc' }
+            }),
+            prisma.service.findMany({
+                include: { provider: { select: { email: true, photoUrl: true } } },
+                orderBy: { createdAt: 'desc' }
+            }),
+            prisma.accessory.findMany({
+                include: { owner: { select: { email: true, photoUrl: true } } },
+                orderBy: { createdAt: 'desc' }
+            }),
+            prisma.user.findMany({
+                select: {
+                    id: true,
+                    email: true,
+                    role: true,
+                    photoUrl: true,
+                    createdAt: true,
+                    _count: {
+                        select: {
+                            pets: true,
+                            services: true,
+                            accessories: true,
+                            subscriptions: true
+                        }
+                    }
+                },
+                orderBy: { createdAt: 'desc' }
+            })
+        ]);
+
+        res.json({
+            stats: {
+                users: usersCount,
+                pets: petsCount,
+                services: servicesCount,
+                accessories: accessoriesCount,
+                documents: documentsCount
+            },
+            data: {
+                pets,
+                services,
+                accessories,
+                users
+            }
+        });
+    } catch (err: any) {
+        console.error('Admin Data Error:', err);
+        res.status(500).json({ error: 'Erro ao buscar dados globais do sistema' });
+    }
+});
+
 // GET Top 10 Pets (Last 10 registered, public)
 app.get('/api/public/top10', async (req, res) => {
     try {

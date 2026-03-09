@@ -1,9 +1,25 @@
 ﻿export interface User {
   id: number;
   email: string;
-  role: 'owner' | 'provider';
+  role: 'owner' | 'provider' | 'global_admin';
   photoUrl?: string;
   token?: string; // JWT token
+}
+
+export interface AdminData {
+  stats: {
+    users: number;
+    pets: number;
+    services: number;
+    accessories: number;
+    documents: number;
+  };
+  data: {
+    pets: any[];
+    services: any[];
+    accessories: any[];
+    users: any[];
+  };
 }
 
 export interface Pet {

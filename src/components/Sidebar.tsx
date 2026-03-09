@@ -14,16 +14,20 @@ import {
     X
 } from 'lucide-react';
 
+import { User as UserType } from '../types';
+
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
     setView: (view: any) => void;
     currentView: string;
+    user: UserType | null;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView, user }) => {
     const menuItems = [
         { id: 'presentation', label: 'Apresentação', icon: FileText },
+        ...(user?.role === 'global_admin' ? [{ id: 'admin', label: 'Painel Admin', icon: ShieldCheck }] : []),
         { id: 'dashboard', label: 'Documentação Digital', icon: FileText },
         { id: 'marketplace', label: 'Serviços', icon: ShoppingBag },
         { id: 'shop', label: 'Pets à Venda', icon: Dog },
