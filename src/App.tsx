@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { MessageCircle, Instagram, Linkedin, Twitter, ChevronUp } from 'lucide-react';
 import { User, Pet, Service } from './types';
@@ -20,6 +20,7 @@ import DocumentViewer from './components/Dashboard/DocumentViewer';
 import PresentationView from './components/PresentationView';
 import AuthPrompt from './components/Dashboard/AuthPrompt';
 import AdminDashboardView from './components/Admin/AdminDashboardView';
+import DogMixView from './components/DogMixView';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(() => {
@@ -27,7 +28,7 @@ export default function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found' | 'presentation' | 'admin'>('home');
+  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found' | 'presentation' | 'admin' | 'dogmix'>('home');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [pets, setPets] = useState<Pet[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -207,6 +208,8 @@ export default function App() {
           {view === 'lost-found' && <LostFoundView key="lost-found" user={user} />}
 
           {view === 'presentation' && <PresentationView key="presentation" setView={setView} />}
+
+          {view === 'dogmix' && <DogMixView key="dogmix" />}
 
           {view === 'profile' && !user && (
             <AuthView key="auth" onLogin={handleAuth} loading={loading} />

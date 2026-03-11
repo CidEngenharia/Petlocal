@@ -1,4 +1,4 @@
-﻿export interface User {
+export interface User {
   id: number;
   email: string;
   role: 'owner' | 'provider' | 'global_admin';
@@ -55,6 +55,24 @@ export interface Vaccine {
   nextDue?: string;
 }
 
+export interface ServiceReview {
+  id: number;
+  serviceId: number;
+  userId: number;
+  rating: number;
+  createdAt: string;
+  user?: { email: string; photoUrl?: string };
+}
+
+export interface ServiceComment {
+  id: number;
+  serviceId: number;
+  userId: number;
+  text: string;
+  createdAt: string;
+  user?: { email: string; photoUrl?: string };
+}
+
 export interface Service {
   id: number;
   providerId: number;
@@ -66,6 +84,10 @@ export interface Service {
   whatsapp?: string;
   instagram?: string;
   photoUrl?: string;
+  avgRating?: number;
+  reviewCount?: number;
+  reviews?: ServiceReview[];
+  comments?: ServiceComment[];
 }
 
 export interface PetDocument {

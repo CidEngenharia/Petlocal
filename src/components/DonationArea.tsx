@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Heart, PawPrint, MessageCircle, Info, Lock, MapPin, Phone, User as UserIcon } from 'lucide-react';
 import { Pet, User } from '../types';
@@ -58,7 +58,7 @@ const DonationArea: React.FC<DonationAreaProps> = ({ user }) => {
                 <div className="inline-flex p-4 bg-brand-bg rounded-3xl mb-6">
                     <PawPrint className="w-12 h-12 text-brand-primary" />
                 </div>
-                <h2 className="text-4xl font-black mb-4">Adoção e Busca</h2>
+                <h2 className="text-4xl font-black mb-4">Doação e Adoção</h2>
                 <p className="text-stone-500 max-w-2xl mx-auto font-medium">
                     Encontre o novo membro da sua família ou parceiros para cruza.
                     Nossa comunidade está aqui para conectar tutores de forma responsável.

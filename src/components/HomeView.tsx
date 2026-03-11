@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { FileText, Calendar, Search, ShieldCheck, PawPrint, CheckCircle, ExternalLink, Printer, Shield, Tag, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -96,7 +96,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onGetStarted }) => {
                 <div className="grid md:grid-cols-3 gap-8">
                     <ServiceFeatureCard icon={<FileText className="w-8 h-8" />} title="Documentação Digital" description="Emissão instantânea de RG e Certidão de Nascimento com QR Code de verificação." />
                     <ServiceFeatureCard icon={<Calendar className="w-8 h-8" />} title="Controle de Vacinas" description="Histórico completo e lembretes inteligentes para nunca perder uma dose." />
-                    <ServiceFeatureCard icon={<Search className="w-8 h-8" />} title="Marketplace Pet" description="Encontre adestradores, hotéis e veterinários avaliados pela comunidade." />
+                    <ServiceFeatureCard icon={<Search className="w-8 h-8" />} title="Mercado Pet" description="Encontre adestradores, hotéis e veterinários avaliados pela comunidade." />
                 </div>
             </section>
 

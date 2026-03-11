@@ -1,0 +1,40 @@
+{
+  "cheap_models": [
+    "ministral-8b",
+    "phi-3-mini",
+    "phi-3-medium",
+    "llama-3-8b",
+    "llama-3.1-8b",
+    "mistral-7b",
+    "gemma-2-9b",
+    "qwen2-7b",
+    "qwen2-14b"
+  ],
+
+  "coding_models": [
+    "qwen2.5-coder-7b",
+    "qwen2.5-coder-32b",
+    "deepseek-coder-6.7b",
+    "deepseek-coder-33b",
+    "starcoder2-15b",
+    "codellama-13b",
+    "codellama-34b"
+  ],
+
+  "reasoning_models": [
+    "deepseek-r1",
+    "deepseek-r1-distill",
+    "claude-sonnet",
+    "claude-haiku",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash"
+  ],
+
+  "large_context_models": [
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gpt-4.1",
+    "gpt-4o",
+    "claude-opus"
+  ]
+}

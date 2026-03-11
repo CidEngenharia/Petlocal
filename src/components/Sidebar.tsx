@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     PawPrint,
@@ -29,12 +29,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView
         { id: 'presentation', label: 'Apresentação', icon: FileText },
         ...(user?.role === 'global_admin' ? [{ id: 'admin', label: 'Painel Admin', icon: ShieldCheck }] : []),
         { id: 'dashboard', label: 'Documentação Digital', icon: FileText },
-        { id: 'marketplace', label: 'Serviços', icon: ShoppingBag },
-        { id: 'shop', label: 'Pets à Venda', icon: Dog },
-        { id: 'donations', label: 'Doações', icon: Heart },
+        { id: 'marketplace', label: 'Mercado Pet', icon: ShoppingBag },
+        { id: 'donations', label: 'Doação e Adoção', icon: Heart },
         { id: 'lost-found', label: 'Achados e Perdidos', icon: Search },
         { id: 'tracker', label: 'Rastreador', icon: Navigation },
         { id: 'top10', label: 'Top 10 Pets', icon: ShieldCheck },
+        { id: 'dogmix', label: 'DogMix IA', icon: Dog },
         { id: 'profile', label: 'Meu Perfil', icon: Users },
     ];
 

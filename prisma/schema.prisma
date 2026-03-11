@@ -10,17 +10,19 @@ datasource db {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  email         String         @unique
-  password      String
-  role          String
-  photoUrl      String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  accessories   Accessory[]
-  pets          Pet[]
-  services      Service[]
-  subscriptions Subscription[]
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
+  password        String
+  role            String
+  photoUrl        String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  accessories     Accessory[]
+  pets            Pet[]
+  services        Service[]
+  subscriptions   Subscription[]
+  serviceReviews  ServiceReview[]
+  serviceComments ServiceComment[]
 }
 
 model Pet {
@@ -58,7 +60,7 @@ model Vaccine {
 }
 
 model Service {
-  id          Int      @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   providerId  Int
   type        String
   name        String
@@ -68,9 +70,35 @@ model Service {
   whatsapp    String?
   instagram   String?
   photoUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  provider    User     @relation(fields: [providerId], references: [id])
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  provider    User             @relation(fields: [providerId], references: [id])
+  reviews     ServiceReview[]
+  comments    ServiceComment[]
+}
+
+model ServiceReview {
+  id        Int      @id @default(autoincrement())
+  serviceId Int
+  userId    Int
+  rating    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, userId])
+}
+
+model ServiceComment {
+  id        Int      @id @default(autoincrement())
+  serviceId Int
+  userId    Int
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Document {
