@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, currentView, setView, onOpenSideb
                         <button onClick={() => setView('home')} className={`text-sm font-medium ${currentView === 'home' ? 'text-brand-primary' : 'text-stone-500'}`}>Início</button>
                         <button onClick={() => setView('presentation')} className={`text-sm font-medium ${currentView === 'presentation' ? 'text-brand-primary' : 'text-stone-500'}`}>Apresentação</button>
                         <button onClick={() => setView('marketplace')} className={`text-sm font-medium ${currentView === 'marketplace' ? 'text-brand-primary' : 'text-stone-500'}`}>Mercado Pet</button>
-                        <button onClick={() => setView('top10')} className={`text-sm font-medium ${currentView === 'top10' ? 'text-brand-primary' : 'text-stone-500'}`}>Top 10</button>
+                        <button onClick={() => setView('social-responsibility')} className={`text-sm font-medium ${currentView === 'social-responsibility' ? 'text-brand-primary' : 'text-stone-500'}`}>Responsabilidade</button>
                         {user && (
                             <button onClick={() => setView(user.role === 'global_admin' ? 'admin' : 'dashboard')} className={`text-sm font-medium ${(currentView === 'dashboard' || currentView === 'admin') ? 'text-brand-primary' : 'text-stone-500'}`}>
                                 {user.role === 'global_admin' ? 'Painel Admin' : (user.role === 'provider' ? 'Meus Serviços' : 'Meus Pets')}

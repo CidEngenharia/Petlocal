@@ -21,6 +21,8 @@ import PresentationView from './components/PresentationView';
 import AuthPrompt from './components/Dashboard/AuthPrompt';
 import AdminDashboardView from './components/Admin/AdminDashboardView';
 import DogMixView from './components/DogMixView';
+import SocialResponsibility from './components/SocialResponsibility';
+
 
 export default function App() {
   const [user, setUser] = useState<User | null>(() => {
@@ -28,7 +30,7 @@ export default function App() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found' | 'presentation' | 'admin' | 'dogmix'>('home');
+  const [view, setView] = useState<'home' | 'dashboard' | 'marketplace' | 'profile' | 'donations' | 'shop' | 'top10' | 'tracker' | 'lost-found' | 'presentation' | 'admin' | 'dogmix' | 'social-responsibility'>('home');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [pets, setPets] = useState<Pet[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -210,6 +212,8 @@ export default function App() {
           {view === 'presentation' && <PresentationView key="presentation" setView={setView} />}
 
           {view === 'dogmix' && <DogMixView key="dogmix" />}
+          {view === 'social-responsibility' && <SocialResponsibility key="social" />}
+
 
           {view === 'profile' && !user && (
             <AuthView key="auth" onLogin={handleAuth} loading={loading} />
@@ -255,7 +259,15 @@ export default function App() {
               Developer cidEngenharia - Sidney Sales
             </a>
 
+            <button
+              onClick={() => setView('social-responsibility')}
+              className="text-white/40 hover:text-white/80 transition-all text-xs mb-4"
+            >
+              Nossa Responsabilidade Social
+            </button>
+
             <div className="flex justify-center items-center gap-6">
+
               <a href="https://wa.me/5571984184782" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white/80 transition-all hover:scale-110">
                 <MessageCircle className="w-5 h-5" />
               </a>

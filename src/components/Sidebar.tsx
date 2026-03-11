@@ -35,6 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, setView, currentView
         { id: 'tracker', label: 'Rastreador', icon: Navigation },
         { id: 'top10', label: 'Top 10 Pets', icon: ShieldCheck },
         { id: 'dogmix', label: 'DogMix IA', icon: Dog },
+        { id: 'social-responsibility', label: 'Impacto Social', icon: Heart },
         { id: 'profile', label: 'Meu Perfil', icon: Users },
     ];
 
