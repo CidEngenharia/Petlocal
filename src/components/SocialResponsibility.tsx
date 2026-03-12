@@ -79,8 +79,8 @@ const SocialResponsibility: React.FC = () => {
                         <div className="flex-1 relative">
                             <div className="absolute inset-0 bg-gradient-to-tr from-[#004010]/20 to-transparent rounded-[4rem] -rotate-3"></div>
                             <img
-                                src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                                alt="Pessoa abraçando cachorro"
+                                src="/qr_code_info.jpg"
+                                alt="QR Code de identificação pet"
                                 className="relative rounded-[4rem] shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700"
                             />
                         </div>
